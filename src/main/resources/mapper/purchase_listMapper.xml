@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Purchase_listDao">
+	<!-- 查询所有满足条件的进货单 -->
+	<select id="findPurchase_lists" parameterType="map" resultType="map">
+		select purchase_list_id,purchase_list_unique,p.shop_unique,purchase_list_date,purchase_list_total,purchase_list_statue,shop_name
+		from purchase_list p left join shops s on p.shop_unique=s.shop_unique
+		where  1=1
+		<if test="startDate!=null and endDate!=null">and purchase_list_date between #{startDate} and #{endDate}</if>
+		<if test="purchase_list_id!=null">  and purchase_list_id like #{purchase_list_id}</if>
+		<if test="shop_unique!=null"> and p.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and p.shop_unique in 
+		(select shop_unique from manager m left join shops s on m.manager_unique=s.manager_unique where m.manager_unique=#{manager_unique})</if>
+	</select>
+	<update id="updatepurchase_list" parameterType="map">
+		update purchase_list set purchase_list_statue=#{purchase_list_statue} where purchase_list_unique=#{purchase_list_unique}
+	</update>
+	<!-- 查询周期内店铺进货总金额 -->
+	<select id="findPurchases" parameterType="map" resultType="map">
+		select sum(purchase_list_total) sums,shop_name
+		from shops s left join 
+		(select purchase_list_total,shop_unique  from purchase_list where 1=1
+			<if test="startDate!=null"> and purchase_list_date>#{startDate}</if>
+			<if test="endDate!=null"> and #{endDate} >purchase_list_date</if>
+		) p on s.shop_unique=p.shop_unique
+		where 1=1
+		<if test="shop_unique!=null"> and s.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and s.shop_unique in
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		group by shop_name
+	</select>
+	<!-- 查询订货单表格，生成excel表格 -->
+	<select id="findPurs" parameterType="map" resultType="org.haier.shop.entity.Purchase">
+		select purchase_list_id,p.purchase_list_unique,p.shop_unique,purchase_list_date,purchase_list_total,purchase_list_statue,d.goods_unique,purchase_list_detail_count,purchase_list_detail_price,goods_name
+		from purchase_list p left join purchase_list_detail d on p.purchase_list_unique=d.purchase_list_unique left join goods g on d.goods_barcode=g.goods_barcode
+		where  1=1
+		<if test="purchase_list_id!=null">  and purchase_list_id like #{purchase_list_id}</if>
+		<if test="shop_unique!=null"> and p.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and p.shop_unique in 
+		(select shop_unique from manager m left join shops s on m.manager_unique=s.manager_unique where m.manager_unique=#{manager_unique})</if>
+	 </select>
+	 <!-- 加入新订单 -->
+	 <insert id="newPurchase_list" parameterType="map">
+	 	insert into purchase_list(purchase_list_unique,purchase_list_date,purchase_list_total,shop_unique,purchase_list_statue)
+	 	values
+	 	(#{purchase_list_unique},#{purchase_list_date},#{purchase_list_total},#{shop_unique},#{purchase_list_statue});
+	 </insert>
+	 <!-- 查询订单详情,针对购物车 -->
+	 <select id="findPurchaseDetails" parameterType="map" resultType="map">
+	 	select p.purchase_list_unique,d.goods_barcode,purchase_list_detail_count,s.supplier_unique,g.goods_price,g.goods_name
+	 	from purchase_list p left join purchase_list_detail d on p.purchase_list_unique=d.purchase_list_unique left join sup_goods g on d.goods_barcode=g.goods_barcode and  d.supplier_unique=g.supplier_unique
+	 		left join supplier s on g.supplier_unique=s.supplier_unique 
+	 	where 1=1
+	 	<if test="purchase_list_statue!=null"> and purchase_list_statue=#{purchase_list_statue}</if>
+	 	<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	 </select>
+	 <!-- 删除购物车里的订单详情 -->
+	 <delete id="rmCartGoods" parameterType="map">
+	 	delete from purchase_list_detail 
+	 	where goods_barcode=#{goods_barcode} and  purchase_list_unique in (select purchase_list_unique from purchase_list where shop_unique=#{shop_unique} and purchase_list_statue=#{purchase_list_statue})
+	 </delete>
+	 <!-- 将购物车里的商品转化为正式订单 -->
+	 <update id="newPurchaselist" parameterType="map">
+	 	update purchase_list set purchase_list_statue=1
+	 	<if test="purchase_list_total!=null">,purchase_list_total=#{purchase_list_total}</if>
+	 	<if test="purchase_list_date!=null">,purchase_list_date=#{purchase_list_date}</if>
+	 	where purchase_list_unique=#{purchase_list_unique}
+	 </update>
+</mapper>

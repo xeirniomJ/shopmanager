@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理员信息管理</title>
+<link rel="stylesheet" type="text/css" href="../../css/public.css"> 
+</head>
+<body>
+	<section>
+		<h2>管理员信息管理</h2>
+		<br>
+		<table>
+			<thead>
+				<tr>
+					<th>管理属性</th>
+					<th>属性值</th>
+				</tr>
+			</thead>			
+			<tbody>
+				<tr>
+					<td>管理员账号</td>
+					<td><input type="text" class="change" id="manager_account" disabled="disabled"></td>
+				</tr>
+				<tr>
+					<td>管理员名称</td>
+					<td><input type="text" class="change" id="manager_name"></td>
+				</tr>
+				<tr>
+					<td>管理员联系方式</td>
+					<td><input type="text" class="change" id="manager_phone"></td>
+				</tr>
+			</tbody>
+		</table>
+		<p class="center">
+			<input type="button" value="提交修改" id="updateManagerMessage">
+		</p>
+	</section>
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/public.js"></script>
+	<script type="text/javascript" src="../../js/cookie_util.js"></script>
+	<script type="text/javascript" src="../../js/manager/managerMessage.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.SupplierDao">
+	<!-- 查询所在区县商品供应商 -->
+	<select id="findGoodsSuppliers" parameterType="map" resultType="map">
+		select p.supplier_unique,supplier_name
+		from supplier p left join sup_goods g on p.supplier_unique=g.supplier_unique
+		where area_dict_num=#{area_dict_num} and  goods_barcode=#{goods_barcode}
+	</select>
+	<!-- 查询所有店铺申请 -->
+	<select id="findSups" parameterType="map" resultType="map">
+		select  supplier_unique,supplier_account,supplier_name,supplier_address,supplier_phone,supplier_remark,company_name,company_leagl,
+		identitypositive_path,identityopposite_path,licence_path,examine_reason,examinestatus,supplier_longitude,supplier_latitude,area_dict_num
+		from supplier 
+		where 1=1
+		<if test="examinestatus!=null"> and examinestatus=#{examinestatus}</if>
+		<if test="supper_name!=null"> and  supper_name like #{supplier_name}</if>
+	</select>
+	<!-- 查看供应商详情 -->
+	<select id="loadSupplierDetail" parameterType="map" resultType="map">
+		select supplier_name,supplier_phone,supplier_remark,supplier_address,company_name,company_leagl,identitypositive_path,identityopposite_path,
+		licence_path,supplier_longitude,supplier_latitude,area_dict_num
+		from supplier
+		where 1=1
+		<if test="supplier_unique!=null"> and supplier_unique=#{supplier_unique}</if>
+	</select>
+	<!-- 更新供应商审核信息 -->
+	<update id="updateSupplier" parameterType="map">
+		update supplier set supplier_unique=#{supplier_unique}
+		<if test="examinestatus!=null">,examinestatus=#{examinestatus}</if>
+		<if test="examinestatus_reason!=null">,examinestatus_reason=#{examinestatu_reason}</if>
+		where supplier_unique=#{supplier_unique}
+	</update>
+	<!-- 根据管理员信息，查询满足条件的供应商信息 -->
+	<select id="findSuppliers" parameterType="map" resultType="map">
+		select supplier_unique,supplier_name,supplier_address,supplier_phone,supplier_remark,examinestatus
+		from(
+			(select supplier_unique,supplier_name,supplier_address,supplier_phone,supplier_remark,examinestatus
+			from supplier s left join area_dict a on s.area_dict_num=a.area_dict_num left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="message!=null"> and supplier_name like #{message}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="area_dict_num!=null"> and  a.area_dict_num=#{area_dict_num}</if>
+			<if test="examinestatus!=null"> and examinestatus=#{examinestatus}</if>
+			)
+			union
+			(select supplier_unique,supplier_name,supplier_address,supplier_phone,supplier_remark,examinestatus
+			from supplier s left join area_dict a on s.area_dict_num=a.area_dict_num left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="message!=null"> and supplier_phone like #{message}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="area_dict_num!=null"> and  a.area_dict_num=#{area_dict_num}</if>
+			<if test="examinestatus!=null"> and examinestatus=#{examinestatus}</if>
+			)
+		) o
+		<if test="startNum!=null and pageSize!=null">
+			limit #{startNum},#{pageSize}
+		</if>
+	</select>
+</mapper> 

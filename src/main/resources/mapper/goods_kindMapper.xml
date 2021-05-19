@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Goods_kindDao">
+	<!-- 查询商品分类信息 -->
+	<select id="findGoods_kinds" parameterType="map" resultType="map">
+		select goods_kind_id,goods_kind_name,goods_kind_unique,goods_kind_parunique
+		from goods_kind
+		where 1=1
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+		<if test="goods_kind_parunique!=null"> and goods_kind_parunique=#{goods_kind_parunique}</if>
+		<if test="goods_kind_unique!=null"> and goods_kind_unique=#{goods_kind_unique}</if>
+		<if test="goods_kind_id!=null"> and goods_kind_id=#{goods_kind_id}</if>
+		<if test="goods_kind_name!=null"> and goods_kind_name=#{goods_kind_name}</if>
+		<if test="manager_unique!=null"> 
+			and shop_unique in 
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		 order by goods_kind_parunique
+	</select>
+	<!-- 添加商品类型 -->
+	<insert id="newGoods_kind" parameterType="map">
+		insert into goods_kind(goods_kind_unique,goods_kind_parunique,goods_kind_name,shop_unique) values (#{goods_kind_unique},#{goods_kind_parunique},#{goods_kind_name},#{shop_unique})
+	</insert>
+	<!-- 更新商品类 -->
+	<update id="modifyGoods_kind" parameterType="map" >
+		update goods_kind set goods_kind_parunique=#{goods_kind_parunique},goods_kind_name=#{goods_kind_name}  where goods_kind_id=#{goods_kind_id}
+	</update>
+	<!-- 根据商品大类，查询商品小类 -->
+	<select id="findKinds"  parameterType="map" resultType="map">
+		select k.goods_kind_id,g.goods_kind_name g,g.goods_kind_unique,k.goods_kind_name n
+		from goods_kind g left join goods_kind k on g.goods_kind_unique=k.goods_kind_parunique
+		where 1=1
+		<if test="goods_kind_unique!=null">
+		 and	g.goods_kind_unique=#{goods_kind_unique}
+		</if>
+	</select>
+	<!-- 根据商品小类唯一标识符，查询明细 -->
+	<select id="findKs" parameterType="map" resultType="map">
+		select k.goods_kind_id,g.goods_kind_name k,k.goods_kind_unique,k.goods_kind_name n
+		from goods_kind k left join goods_kind g on g.goods_kind_unique=k.goods_kind_parunique
+		where k.goods_kind_unique=#{goods_kind_unique}
+	</select>
+	<!-- 查询所有商品大类及小类,没选择条件时用 -->
+	<select id="findAllNames"  parameterType="map" resultType="map">
+		select k.goods_kind_id,g.goods_kind_name g,k.goods_kind_unique,k.goods_kind_name n
+		from goods_kind g left join goods_kind k on g.goods_kind_unique=k.goods_kind_parunique
+		where k.goods_kind_parunique!='0'
+		<if test="shop_unique!=null">and  k.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null">
+			and shop_unique in 
+			(select  shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+	</select>
+	<!-- 根据商品小类编号，跳转到修改类页面并查询明细 -->
+	<select id="findk" parameterType="map" resultType="map">
+		select k.goods_kind_id,k.goods_kind_unique,k.goods_kind_name,g.goods_kind_name n
+		from goods_kind k left join goods_kind g on g.goods_kind_unique=k.goods_kind_parunique
+		where k.goods_kind_id=#{goods_kind_id} 
+	</select> 
+	<!-- 查询满足条件的商品类型 -->
+	<select id="finds" parameterType="map" resultType="map">
+		select k.goods_kind_name k,k.goods_kind_unique,g.goods_kind_name g,k.goods_kind_id
+		from goods_kind k left join goods_kind g on g.goods_kind_unique=k.goods_kind_parunique and k.shop_unique=g.shop_unique
+		where k.goods_kind_parunique!='0'
+		<if test="shop_unique!=null"> and k.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and k.shop_unique in
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		<if test="goods_kind_unique!=null"> and k.goods_kind_unique=#{goods_kind_unique}</if>
+		<if test="goods_kind_name!=null"> and k.goods_kind_name=#{goods_kind_name}</if>
+		<if test="goods_kind_parunique!=null"> and k.goods_kind_parunique=#{goods_kind_parunique}</if>
+	</select>
+	<!-- 查询商品分类（管理员版） -->
+	<select id="queryKinds" parameterType="map" resultType="map">
+		select  goods_kind_parunique,goods_kind_unique,goods_kind_name from goods_kind where 1=1
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	</select>
+	
+	<!-- 删除商品分类，以便添加新的商品分类 -->
+	<delete id="deleteShopKinds" parameterType="map">
+		delete from goods_kind 
+		where 1=1
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	</delete>
+	<!-- 将店铺选择的商品分类添加到数据库 -->
+	<insert id="addShopKinds" parameterType="list">
+		insert into  goods_kind (goods_kind_unique,goods_kind_parunique,goods_kind_name,shop_unique)
+		values
+		<foreach collection="list" index="index" item="message" separator=",">
+		(
+		#{message.goods_kind_unique},#{message.goods_kind_parunique},#{message.goods_kind_name},#{message.shop_unique}
+		)
+		</foreach>
+	</insert>
+</mapper>

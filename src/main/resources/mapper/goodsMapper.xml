@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.GoodsDao">
+	<select id="findGoods" parameterType="map" resultType="org.haier.shop.entity.Goods">
+		select * from goods where 1=1
+		<if test="goods_kind_uniuqe!=null"> and goods_kind_unique=#{goods_kind_uniuqe}</if>
+		<if test="goods_barcode!=null"> and goods_barcode like '%'||#{goods_barcode}||"%"</if>
+		<if test="goods_alias!=null"> and goods_alias like '%'||#{goods_alias}||"%"</if>
+		<if test="goods_name!=null"> and goods_name like "%"||#{goods_name}||"%"</if>
+		<if test="goods_id!=null"> and goods_id like "%"||#{goods_id}||"%"</if>
+		<if test="goods_brand!=null"> and goods_brand like "%"||#{goods_brand}||"%"</if>
+	</select>
+	<insert id="newGoods" parameterType="map">
+		insert into goods(shop_unique,goods_barcode,goods_brand,goods_name,goods_alias,goods_in_price,goods_sale_price,
+		goods_life,goods_points,goods_address,goods_discount,goods_contain,goods_picturepath,goods_kind_unique,default_supplier_unique,goods_standard,goods_remarks,goods_count
+		) values (#{shop_unique},#{goods_barcode},#{goods_brand},#{goods_name},#{goods_alias},#{goods_in_price},#{goods_sale_price},
+		#{goods_life},#{goods_points},#{goods_address},#{goods_discount},#{goods_contain},#{goods_picturepath},#{goods_kind_unique},#{default_supplier_unique},#{goods_standard},#{goods_remarks},#{goods_count})
+	</insert>
+	<!-- 促销修改界面，查询满足条件的商品 -->
+	<!-- 商品管理界面，查询满足条件的商品信息 -->
+	<select id="findGoods1" parameterType="map" resultType="map">
+		select goods_id,g.shop_unique,g.goods_barcode,g.goods_brand,g.goods_name,g.goods_alias,goods_in_price,g.goods_sale_price,g.goods_promotion,shop_name,g.goods_count,supplier_name,
+		g.goods_life,goods_points,g.goods_address,g.goods_discount,g.goods_contain,g.goods_picturepath,g.goods_kind_unique,
+		u.supplier_unique,goods_standard,goods_remarks,k.goods_kind_name k,l.goods_kind_name l,goods_price
+		from goods_kind k left join goods_kind l on k.goods_kind_parunique=l.goods_kind_unique left join shops s on k.shop_unique=s.shop_unique left join goods g on g.goods_kind_unique=k.goods_kind_unique
+		left join supplier u on g.default_supplier_unique=u.supplier_unique left join sup_goods o on o.goods_barcode =g.goods_barcode and g.default_supplier_unique=o.supplier_unique
+		where 1=1
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		 </if>
+		<if test="goodsmessage!=null">
+			and g.goods_barcode in (
+				select goods_barcode from goods where shop_unique = #{shop_unique}
+			 	<if test="goodsmessage!=null"> and  goods_name like #{goodsmessage}</if>
+			 	union
+			 	select goods_barcode from goods where  shop_unique = #{shop_unique}
+			 	<if test="goodsmessage!=null"> and  goods_alias  like #{goodsmessage}</if>
+			 	union 
+			 	select goods_barcode from goods where  shop_unique=#{shop_unique}
+			 	<if test="goodsmessage!=null"> and  goods_brand like #{goodsmessage}</if>
+			 	union
+			 	select goods_barcode from goods where   shop_unique =#{shop_unique}
+			 	<if test="goodsmessage!=null"> and  goods_barcode like #{goodsmessage}</if>
+				)
+		</if>
+		<if test="goods_kind_parunique!=null"> and k.goods_kind_parunique=#{goods_kind_parunique} </if>
+		<if test="goods_kind_unique!=null"> and g.goods_kind_unique=#{goods_kind_unique} </if>
+		<if test="goods_promotion!=null"> and goods_promotion=#{goods_promotion}</if>
+	</select>
+	<!-- 查询商品详细信息及分类 -->
+	<select id="findGood" parameterType="map" resultType="map">
+		select goods_id,g.shop_unique,g.goods_barcode,g.goods_brand,g.goods_name,g.goods_alias,goods_in_price,goods_sale_price,goods_count,supplier_name,goods_price,
+		g.goods_life,goods_points,g.goods_address,g.goods_discount,g.goods_contain,g.goods_picturepath,g.goods_kind_unique,u.supplier_unique,goods_standard,goods_remarks,l.goods_kind_name ,
+		l.goods_kind_unique parunique ,k.goods_kind_name name
+		from goods g left join goods_kind k on g.goods_kind_unique=k.goods_kind_unique left join goods_kind l on k.goods_kind_parunique=l.goods_kind_unique left join supplier u on g.default_supplier_unique=u.supplier_unique
+		left join sup_goods o on g.goods_barcode= o.goods_barcode and g.default_supplier_unique=o.supplier_unique
+		where 1=1
+		<if test="goods_barcode!=null"> and g.goods_barcode=#{goods_barcode}</if>
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+	</select>
+	<!-- 更新商品促销信息 -->
+	<update id="updateGoods_promotion" parameterType="map">
+		update goods set goods_barcode=#{goods_barcode}
+		<if test="goods_promotion!=null">,goods_promotion=#{goods_promotion}</if>
+		<if test="goods_discount!=null">,goods_discount=#{goods_discount}</if>
+		<if test="goods_sale_price!=null">,goods_sale_price=#{goods_sale_price} </if>
+		where goods_barcode=#{goods_barcode} and shop_unique=#{shop_unique}
+	</update>
+	<!-- 测试用，无实际意义 -->
+	<select id="test" parameterType="map" resultType="map">
+		select goods_id,g.shop_unique,goods_barcode,goods_brand,goods_name,goods_alias,goods_in_price,goods_sale_price,goods_promotion,
+		goods_life,goods_points,goods_address,goods_discount,goods_contain,goods_picturepath,g.goods_kind_unique,default_supplier_unique,goods_standard,goods_remarks,goods_kind_group,goods_kind_name
+		from goods g left join goods_kind k on g.goods_kind_unique=k.goods_kind_unique where 1=1 
+		<if test="goods_name!=null"> and goods_name like '%'||#{goods_name}||'%'</if>
+	</select>
+	<!-- 根据店铺编号和输入条件，查询满足条件的商品 -->
+	<!-- 查询商品总量 -->
+	<select id="findGoodss" parameterType="map" resultType="map"> 
+		(select goods_barcode,goods_name,goods_in_price,goods_sale_price,goods_count,shop_name,goods_alias
+		from goods g left join shops s on g.shop_unique=s.shop_unique
+		where  1=1
+		<if test="goodsMessage!=null">
+			and goods_barcode in (
+				select goods_barcode from goods where goods_name like #{goodsMessage}	
+				<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+				union
+				select goods_barcode from goods where goods_barcode like #{goodsMessage}	
+				<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+				union
+				select goods_barcode from goods where goods_alias like #{goodsMessage}	
+				<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+				union
+				select goods_barcode from goods where goods_brand like #{goodsMessage}	
+				<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+			)
+		</if>
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select p.shop_unique from shops p where manager_unique=#{manager_unique})
+		</if>
+		) 
+		union
+		(select goods_barcode,goods_name,goods_in_price,goods_sale_price,goods_count,shop_name,goods_alias
+		from goods g left join shops s on g.shop_unique=s.shop_unique
+		where goods_alias like #{goods_alias}
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select p.shop_unique from shops p  where manager_unique=#{manager_unique})
+		</if>
+		) 
+		union
+		(select goods_barcode,goods_name,goods_in_price,goods_sale_price,goods_count,shop_name,goods_alias
+		from goods g left join shops s on g.shop_unique=s.shop_unique
+		where  goods_barcode like #{goods_barcode}
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select p.shop_unique from shops p where manager_unique=#{manager_unique})
+		</if>
+		) 
+		union
+		(select goods_barcode,goods_name,goods_in_price,goods_sale_price,goods_count,shop_name,goods_alias
+		from goods g left join shops s on g.shop_unique=s.shop_unique
+		where  goods_brand like #{goods_brand}
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select p.shop_unique from shops p  where manager_unique=#{manager_unique})
+		</if>
+		) 
+	</select>
+	<!-- 更新商品信息 -->
+	<update id="updateGoods" parameterType="map">
+		update goods set goods_id=#{goods_id}
+		<if test="goods_name!=null">,goods_name=#{goods_name}</if>
+		<if test="goods_brand!=null">,goods_brand=#{goods_brand}</if>
+		<if test="goods_barcode!=null">,goods_barcode=#{goods_barcode}</if>
+		<if test="goods_alias!=null"> ,goods_alias=#{goods_alias}</if>
+		<if test="goods_sale_price!=null">,goods_sale_price=#{goods_sale_price}</if>
+		<if test="goods_in_price!=null"> ,goods_in_price=#{goods_in_price}</if>
+		<if test="goods_life!=null"> ,goods_life=#{goods_life}</if>
+		<if test="goods_points!=null">,goods_points=#{goods_points}</if>
+		<if test="goods_contain!=null">,goods_contain=#{goods_contain}</if>
+		<if test="goods_kind_unique!=null">, goods_kind_unique=#{goods_kind_unique}</if>
+		<if test="goods_address!=null">,goods_address=#{goods_address}</if>
+		<if test="goods_standard!=null"> ,goods_standard=#{goods_standard}</if>
+		<if test="goods_discount!=null">,goods_discount=#{goods_discount}</if>
+		<if test="goods_count!=null">,goods_count=#{goods_count}</if>
+		<if test="supplier_unique!=null">,default_supplier_unique=#{supplier_unique}</if>
+		<if test="goods_picturepath!=null">,goods_picturepath=#{goods_picturepath}</if>
+		where goods_id=#{goods_id} 
+	</update>
+	<select id="slid" resultType="integer">
+		select goods_id from goods
+	</select>
+	<!-- 根据条件查询满足条件的商品 -->
+	<select id="findGoods2" parameterType="map" resultType="map">
+	select goods_name,goods_barcode,goods_sale_price,goods_in_price from (
+		(select goods_name,goods_barcode ,goods_sale_price,goods_in_price
+		from goods g
+		where goods_name like #{goods_message} and shop_unique=#{shop_unique}) 
+		union
+		(select goods_name,goods_barcode ,goods_sale_price,goods_in_price
+		from goods g
+		where goods_barcode like #{goods_message} and shop_unique=#{shop_unique})
+		union 
+			(select goods_name,goods_barcode ,goods_sale_price,goods_in_price
+		from goods g
+		where goods_alias like #{goods_message} and shop_unique=#{shop_unique}) 
+		union
+		(select goods_name,goods_barcode ,goods_sale_price,goods_in_price
+		from goods g
+		where goods_brand like #{goods_message} and shop_unique=#{shop_unique})  
+		) a
+		<if test="page_start!=null and page_size!=null">
+			limit #{page_start},#{page_size}
+		</if>
+	</select>
+	<!-- 删除商品 -->
+	<delete id="deleteGoods" parameterType="map">
+		delete from goods where goods_barcode=#{goods_barcode} and shop_unique=#{shop_unique}
+	</delete>
+	<!-- 测试模糊查询测试 -->
+	<select id="likeQuery" parameterType="map" resultType="map">
+		select goods_id,g.shop_unique,g.goods_barcode,g.goods_brand,g.goods_name,g.goods_alias,goods_in_price,g.goods_sale_price,g.goods_promotion,shop_name,g.goods_count,supplier_name,
+		g.goods_life,goods_points,g.goods_address,g.goods_discount,g.goods_contain,g.goods_picturepath,g.goods_kind_unique,
+		u.supplier_unique,goods_standard,goods_remarks,k.goods_kind_name k,l.goods_kind_name l,goods_price
+		from goods g left join goods_kind k on g.goods_kind_unique=k.goods_kind_unique  left join goods_kind l on k.goods_kind_parunique=l.goods_kind_unique left join shops  s on g.shop_unique=s.shop_unique
+		left join supplier u on g.default_supplier_unique=u.supplier_unique left join sup_goods o  on o.goods_barcode =g.goods_barcode  and g.default_supplier_unique=o.supplier_unique
+		where 1=1
+		<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and g.shop_unique in 
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		 </if>
+		<if test="goods_name!=null"> and g.goods_name in (select goods_name from goods group by goods_name having INSTR(goods_name,#{goods_name})  &lt;>0)</if>
+		<if test="goods_kind_parunique!=null"> and k.goods_kind_parunique=#{goods_kind_parunique} </if>
+		<if test="goods_kind_unique!=null"> and g.goods_kind_unique=#{goods_kind_unique} </if>
+		<if test="goods_promotion!=null"> and goods_promotion=#{goods_promotion}</if>
+	 </select>
+	 <!-- 模糊查询合并测试 -->
+	 <select id="likeUnion" parameterType="map" resultType="map">
+	 	select goods_barcode from goods where shop_unique = #{shop_unique}
+	 	<if test="goodsmessage!=null"> and  goods_name like #{goodsmessage}</if>
+	 	union
+	 	select goods_barcode from goods where  shop_unique = #{shop_unique}
+	 	<if test="goodsmessage!=null"> and  goods_alias  like #{goodsmessage}</if>
+	 	union 
+	 	select goods_barcode from goods where  shop_unique=#{shop_unique}
+	 	<if test="goodsmessage!=null"> and  goods_brand like #{goodsmessage}</if>
+	 	union
+	 	select goods_barcode from goods where   shop_unique =#{shop_unique}
+	 	<if test="goodsmessage!=null"> and  goods_barcode like #{goodsmessage}</if>
+	 </select>
+</mapper>

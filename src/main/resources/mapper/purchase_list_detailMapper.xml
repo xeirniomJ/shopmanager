@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Purchase_list_detailDao">
+	<!-- 根据订单详情，查询订单内容 -->
+	<select id="findPurchase_list_details" parameterType="map" resultType="map">
+		select purchase_list_id,p.purchase_list_unique,p.shop_unique,purchase_list_date,purchase_list_total,purchase_list_statue,
+		,purchase_list_detail_count,purchase_list_detail_price,goods_name
+		from purchase_list p left join purchase_list_detail d on p.purchase_list_unique=d.purchase_list_unique left join goods g on d.goods_barcode=g.goods_barcode and p.shop_unique=g.shop_unique
+		where 1=1
+		<if test="purchase_list__detail_id!=null"> and purchase_list_detail_id like #{purchase_list_detail_id}</if>
+		<if test="purchase_list_unique!=null"> and p.purchase_list_unique=#{purchase_list_unique}</if>
+		<if test="goods_name!=null"> and #{goods_name}>=goods_name</if>
+	</select>
+	<insert id="newPurchase_list_detail" parameterType="map">
+		insert into purchase_list_detail(purchase_list_unique,goods_barcode,purchase_list_detail_count,purchase_list_detail_price,supplier_unique)
+		values
+		(#{purchase_list_unique},#{goods_barcode},#{purchase_list_detail_count},#{purchase_list_detail_price},#{supplier_unique})
+	</insert>
+	<!-- 更新店铺购物车订单详情 -->
+	<update id="updateCartDetail" parameterType="map">
+		update purchase_list_detail set goods_barcode=#{goods_barcode}
+		<if test="purchase_list_detail_count!=null">,purchase_list_detail_count=#{purchase_list_detail_count}</if>
+		<if test="supplier_unique!=null">,supplier_unique=#{supplier_unique}</if>
+		<if test="purchase_list_detail_price!=null">,purchase_list_detail_price=#{purchase_list_detail_price}</if>
+		<if test="sup_order_unique!=null">,sup_order_unique=#{sup_order_unique}</if>
+		where purchase_list_unique=#{purchase_list_unique} and goods_barcode=#{goods_barcode}
+	</update>
+	<!-- 添加新的购物车订单详情 -->
+	<insert id="newCartDetail" parameterType="map">
+		insert into purchase_list_detail(purchase_list_unique,goods_barcode,purchase_list_detail_count,supplier_unique)
+		values
+		(#{purchase_list_unique},#{goods_barcode},#{purchase_list_detail_count},#{supplier_unique})
+	</insert>
+</mapper>

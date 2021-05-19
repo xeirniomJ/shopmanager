@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.ManagerDao">
+	<!-- 管理员登录查询 -->
+	<select id="findManagers" parameterType="map" resultType="map">
+		select manager_id,s.shop_unique,manager_name,manager_phone,shop_name,m.manager_unique,m.manager_account,m.manager_level,manager_levelName,
+		power_createManager,power_examShop,power_modifyFunction,power_examSup,power_forbidCus
+		from manager m left join shops s on m.manager_unique=s.shop_unique
+		where 1=1
+		<if test="manager_account!=null"> and m.manager_account=#{manager_account}</if>
+		<if test="manager_pwd!=null"> and m.manager_pwd=#{manager_pwd}</if>
+		<if test="manager_unique!=null"> and m.manager_unique=#{manager_unique}</if>
+		<if test="manager_token!=null"> and manager_token=#{manager_token}</if>
+		<if test="manager_levels!=null"> and manager_level&lt;>#{manager_levels}</if>
+		<if test="manager_level!=null"> and manager_level=#{manager_level}</if>
+	</select>
+	<!-- 管理员单体信息查询 -->
+	<select id="queryManagerDetail" parameterType="map" resultType="map">
+		select manager_account,manager_unique,manager_name,manager_phone,manager_level,power_createManager,power_examShop,power_modifyFunction,
+		power_examSup,power_forbidCus
+		from manager
+		where manager_unique=#{manager_unique}
+	</select>
+	<!-- 更新管理员密钥 -->
+	<update id="updateToken" parameterType="map">
+		update manager set manager_token=#{manager_token}
+		where manager_account=#{manager_account}
+		and manager_pwd=#{manager_pwd}
+	</update>
+	<!-- 注册新用户 -->
+	<insert id="newManager" parameterType="map">
+		insert into manager (manager_account,manager_pwd,manager_name,manager_phone,manager_unique) values
+		(#{manager_account},#{manager_pwd},#{manager_name},#{manager_phone},#{manager_unique})
+	</insert>
+	<!-- 查询管理员所管理的店铺 -->
+	<select id="shops_uniquefind" parameterType="map" resultType="map">
+		select shop_name,shop_unique,manager_account,shop_phone,shop_remark,examinestatus,shop_latitude,shop_longitude,area_dict_num,
+		shop_address_detail,power_supplier,examinestatus_reason
+		from shops 
+		where 1=1
+		<if test="manager_unique!=null">
+			and	manager_unique=#{manager_unique}
+		</if>
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+		group by shop_unique
+	</select>
+	<!-- 查询店铺管理员所管理的店铺的前端管理信息 -->
+	<select id="findShopManagers" parameterType="map" resultType="map">
+		select shop_name,shop_unique,manager_account,shop_phone,shop_remark,examinestatus,shop_latitude,shop_longitude,
+		shop_address_detail
+		from shops 
+		where 1=1
+		<if test="manager_unique!=null">
+			and	manager_unique=#{manager_unique}
+		</if>
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	</select>
+	<!--
+	<update id="updateManagerMessage" parameterType="map">
+		update manager set manager_unique=#{manager_unique}
+		<if test="manager_levelName!=null">,manager_levelName=#{manager_levelName}</if>
+		<if test="manager_level!=null">,manager_level=#{manager_level}</if>
+		<if test="power_createManager!=null">,power_createManager=#{power_createManager}</if>
+		<if test="power_examShop!=null">,power_examShop=#{power_examShop}</if>
+		<if test="power_modifyFunction!=null">,power_modifyFunction=#{power_modifyFunction}</if>
+		<if test="power_examSup!=null">,power_examSup={power_examSup}</if>
+		<if test="power_forbidCus!=null">,power_forbidCus=#{power_forbidCus}</if>
+		<if test="manager_pwd!=null">,manager_pwd=#{manager_pwd}</if>
+		<if test="manager_account!=null">,manager_account=#{manager_account}</if>
+		<if test="manager_phone!=null">,manager_phone=#{manager_phone}</if>
+		<if test="manager_name!=null">,manager_name=#{manager_name}</if>
+		where manager_token=#{manager_token}
+		<if test="manager_unique!=null"> and manager_unique=#{manager_unique}</if>
+		<if test="manager_account!=null"> and manager_account=#{manager_account}</if>
+		<if test="manager_pwd!=null"> and manager_pwd=#{manager_pwd}</if>
+		<if test="manager_token!=null"> and manager_token=#{manager_token}</if>
+	</update>
+	  -->
+	<update id="updateManagerMessage" parameterType="map">
+		update manager set manager_unique=#{manager_unique}
+		<if test="manager_levelName!=null">,manager_levelName=#{manager_levelName}</if>	
+		<if test="manager_level!=null">,manager_level=#{manager_level}</if>
+		<if test="manager_account!=null">,manager_account=#{manager_account}</if>
+		<if test="manager_pwd!=null">,manager_pwd=#{manager_pwd}</if>
+		<if test="manager_phone!=null">,manager_phone=#{manager_phone}</if>
+		<if test="manager_name!=null">,manager_name=#{manager_name}</if>
+		<if test="power_createManager!=null">,power_createManager=#{power_createManager}</if>
+		<if test="power_examShop!=null">,power_examShop=#{power_examShop}</if>
+		<if test="power_examSup!=null">,power_examSup=#{power_examSup}</if>
+		<if test="power_forbidCus!=null">,power_forbidCus=#{power_forbidCus}</if>
+		<if test="power_modifyFunction!=null">,power_modifyFunction=#{power_modifyFunction}</if>
+		where manager_unique=#{manager_unique}
+		<if test="manager_token!=null"> and manager_token=#{manager_token}</if>
+	</update>
+</mapper>

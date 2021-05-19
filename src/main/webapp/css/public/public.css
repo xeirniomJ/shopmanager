@@ -1,0 +1,284 @@
+* {
+	z-index:99;
+	font: 16px/1.5 '微软雅黑', Verdana, Helvetica, Arial, sans-serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-box-sizing: border-box;ba
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	box-sizing: border-box;
+}
+
+body {
+	padding: 10px;
+	height: 100%;
+	overflow: auto;
+}
+
+body {
+	ground: url(images/back-index.png) no-repeat center;
+	background-size: cover;
+	z-index: 100;
+}
+
+#warning,#warning1{
+	height:20px;
+	border: 1px solid red;
+	background-color: red;
+	margin-bottom: 10px;
+	visibility:hidden;
+	text-align: center;
+}
+
+.hidden {
+	display: none;
+}
+
+.checked {
+	background-color: #888777;
+}
+
+.checked1 {
+	background-color: #999999;
+}
+
+ul li, ul {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+ul li{
+	border: 1px solid #3792df;
+}
+.minor {
+	background-color: #3792df;
+	height: 52px;
+}
+
+.top {
+	margin: 0px;
+}
+.smalltable {
+	margin: auto;
+	padding: 0px;
+	width: 60%;
+	height: 25px;
+}
+
+table {
+	width: 100%;
+	margin: auto;
+	border-collapse: collapse;
+	background-color: #ddd;
+}
+
+table td, table th {
+	border: 2px solid #ccc;
+	text-align: center;
+	padding: 0px;
+	margin: 0px height: 25px;
+}
+
+.change {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	border:none;
+	background: none;
+}
+
+.chan {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.center {
+	padding: 0px;
+	margin: auto;
+	text-align: center;
+	width: 100%;
+}
+
+
+br {
+	clear: both;
+	margin: 10px 10px;
+}
+
+hr {
+	clear: both;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.tcdPageCode {
+	padding: 15px 20px;
+	text-align: left;
+	color: #ccc;
+}
+
+.tcdPageCode a {
+	display: inline-block;
+	color: #428bca;
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	border: 1px solid #ddd;
+	margin: 0 2px;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode a:hover {
+	text-decoration: none;
+	border: 1px solid #428bca;
+}
+
+.tcdPageCode span.current {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #fff;
+	background-color: #428bca;
+	border: 1px solid #428bca;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode span.disabled {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #bfbfbf;
+	background: #f2f2f2;
+	border: 1px solid #bfbfbf;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode1 {
+	padding: 15px 20px;
+	text-align: left;
+	color: #ccc;
+}
+
+.tcdPageCode1 a {
+	display: inline-block;
+	color: #428bca;
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	border: 1px solid #ddd;
+	margin: 0 2px;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode1 a:hover {
+	text-decoration: none;
+	border: 1px solid #428bca;
+}
+
+.tcdPageCode1 span.current {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #fff;
+	background-color: #428bca;
+	border: 1px solid #428bca;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+.tcdPageCode1 span.disabled {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	margin: 0 2px;
+	color: #bfbfbf;
+	background: #f2f2f2;
+	border: 1px solid #bfbfbf;
+	border-radius: 4px;
+	vertical-align: middle;
+}
+
+input[type="button"] {
+	border-style: solid;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #ffffff;
+}
+input[type=text] {
+	background-color: #ffffff;
+}
+#testButton:hover {
+	color: #ffffff;
+	background-color: #78c300;
+	border-color: #c5e591;
+}
+.mengban{
+width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	background:#c0c0c0;
+	opacity:0.5;
+	margin:auto;
+	z-index:10000;
+	border: 1px solid yellow;
+	float: left;
+}
+
+tr:hover{
+	background-color: #aaa;
+}
+.button {
+	color: rgb(255, 255, 255);
+	font-size: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 25px;
+	padding-right: 25px;
+	border-style: solid;
+	border-radius: 13px;
+	background-color: #808080;
+}
+
+.button:hover {
+	color: #ffffff;
+	background-color: #78c300;
+	border-color: #c5e591;
+}
+
+.mintable{
+	width: 30%;
+}
+
+option{
+	text-align: center;
+}

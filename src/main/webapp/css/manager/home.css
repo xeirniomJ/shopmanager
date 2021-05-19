@@ -1,0 +1,26 @@
+.div4 {
+	border: 1px solid gray;
+	position: relative;
+	left: 10%;
+	width: 80%;
+	text-align: left;
+}
+span{
+	display: inline-block;
+	text-align: center;
+	height: 100%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.title {
+	width: 20%;
+}
+.division{
+	width: 2%;
+}
+.value {
+	width: 78%;
+}
+.value:hover{
+	background-color: #aaa;
+}

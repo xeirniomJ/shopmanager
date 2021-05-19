@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员公告管理</title>
+<link rel="stylesheet" type="text/css"
+	href="../../css/manager/mainPublic.css">
+</head>
+<body>
+	<section class="main">
+		<h1 class="center">会员公告管理</h1>
+		<br>
+		<div>
+			<div class="center">
+				<textarea cols="10" rows="10"></textarea>
+			</div>
+			<br>
+			<p class="center">
+				<label style="border: 1px solid gray; background-color: gray;"
+					hidden="hidden"><input type="file" id="file" name="file"
+					style="display: none"></label> <input type="button" value="上传文件"
+					id="fileLoad"> <input type="button" value="提交公告"
+					id="submit">
+			</p>
+		</div>
+	</section>
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#fileLoad").click(loadFile);
+			$("#file").change(fileName);
+		});
+		function loadFile() {
+			$("#file").click();
+
+		}
+		function fileName() {
+			var fileName = $("#file").val();
+		}
+	</script>
+</body>
+</html>

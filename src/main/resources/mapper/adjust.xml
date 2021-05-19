@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.AdjustDao">
+	<!-- 查询自己店铺的所有满足条件的调货单 -->
+	<select id="adjust_find" parameterType="map" resultType="map">
+		select adjust_id,adjust_type,adjust_datetime,s.shop_unique,adjust_total,adjust_handlestatue,
+				   adjust_statue,rshop_unique,radjust_datetime,adjust_remark,adjust_validity,goods_name,adjust_count,shop_name,shop_phone,shop_address_detail,adjust_price
+		from adjust a left join shops s on a.rshop_unique=s.shop_unique
+		where 1=1
+		<if test="adjust_statue!=null"> and adjust_statue=#{adjust_statue}</if>
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>
+		<if test="adjust_handlestatue!=null"> and adjust_handlestatue=#{adjust_handlestatue}</if>
+		<if test="shop_unique!=null"> and a.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and a.shop_unique in 
+			(select shop_unique from shops where manager_unique)
+		</if>
+		order by adjust_datetime
+		<if test="page_start!=null and page_size!=null">
+		limit #{page_start},#{page_size}
+		</if>
+	</select>
+	<!-- 取消未响应订单 -->
+	<delete id="adjust_cancel">
+		delete from adjust where adjust_id=#{adjust_id}
+	</delete>
+	<!-- 添加新申请 -->
+	<insert id="adjust_new_save" parameterType="map">
+		insert into adjust(adjust_type,adjust_datetime,adjust_unique,shop_unique,adjust_total,adjust_handlestatue,adjust_statue,
+		adjust_remark,adjust_validity,goods_name,adjust_count,adjust_price,goods_barcode)  values(
+		#{adjust_type},#{adjust_datetime},#{adjust_unique},#{shop_unique},#{adjust_total},#{adjust_handlestatue},#{adjust_statue},
+		#{adjust_remark},#{adjust_validity},#{goods_name},#{adjust_count},#{adjust_price},#{goods_barcode})
+	</insert>
+	<!-- 自动添加调货单响应状态 -->
+	<select id="adjust_statue_find" resultType="map">
+		select adjust_statue from adjust group by adjust_statue
+	</select>
+	<!-- 自动添加调货单处理状态 -->
+	<select id="adjust_handlestatue_find" resultType="map">
+		select adjust_handlestatue from adjust group by adjust_handlestatue
+	</select>
+	<!-- 自动添加申请类型状态 -->
+	<select id="adjust_type_find" resultType="map">
+		select adjust_type from adjust group by adjust_type
+	</select>
+	<!-- 查询其它店铺的调货单 -->
+	<select id="oadjust_find" parameterType="map" resultType="map">
+		select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,k.goods_name,adjust_count,adjust_price,shop_name,shop_phone,
+			shop_latitude,shop_longitude,shop_address_detail,k.goods_barcode 
+			from(
+			(select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,a.goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+			shop_latitude,shop_longitude,shop_address_detail,a.goods_barcode
+			from adjust a left join shops  s on a.shop_unique=s.shop_unique left join goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+			where a.goods_name like #{goods_message} and adjust_statue=#{adjust_statue} and adjust_validity>#{adjust_validity}
+			<if test="shop_unique!=null"> and a.shop_unique &lt;> #{shop_unique}</if>
+			<if test="manager_unique!=null"> and a.shop_manager_unique not in 
+				(select shop_manager from shops manager_unique = #{manager_unique})
+			</if>
+			<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>) 
+			union
+			(select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,a.goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+			shop_latitude,shop_longitude,shop_address_detail,a.goods_barcode
+			from adjust a left join shops  s on a.shop_unique=s.shop_unique left join goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+			where g.goods_alias like #{goods_message}  and adjust_statue=#{adjust_statue} and adjust_validity>#{adjust_validity}
+			<if test="shop_unique!=null"> and a.shop_unique &lt;> #{shop_unique}</if>
+			<if test="manager_unique!=null"> and a.shop_manager_unique not in 
+				(select shop_manager from shops manager_unique = #{manager_unique})
+			</if>
+			<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+			union
+			(select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,a.goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+			shop_latitude,shop_longitude,shop_address_detail,a.goods_barcode
+			from adjust a left join shops  s on a.shop_unique=s.shop_unique left join goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+			where g.goods_brand like #{goods_message}  and adjust_statue=#{adjust_statue} and adjust_validity>#{adjust_validity}
+			<if test="shop_unique!=null"> and a.shop_unique &lt;> #{shop_unique}</if>
+			<if test="manager_unique!=null"> and a.shop_manager_unique not in 
+				(select shop_manager from shops manager_unique = #{manager_unique})
+			</if>
+			<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+			union
+			(select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,a.goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+			shop_latitude,shop_longitude,shop_address_detail,a.goods_barcode
+			from adjust a left join shops  s on a.shop_unique=s.shop_unique left join goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+			where a.goods_barcode like #{goods_message}  and adjust_statue=#{adjust_statue} and adjust_validity>#{adjust_validity}
+			<if test="shop_unique!=null"> and a.shop_unique &lt;> #{shop_unique}</if>
+			<if test="manager_unique!=null"> and a.shop_manager_unique not in 
+				(select shop_manager from shops manager_unique = #{manager_unique})
+			</if>
+			<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+			) k
+			order by adjust_datetime
+			<if test="page_start!=null and page_page_size!=null">
+			limit #{page_start},#{page_size}
+			</if>
+	</select>
+	<!-- 响应调货单 -->
+	<update id="adjust_update" parameterType="map">
+		update adjust set rshop_unique=#{rshop_unique},radjust_datetime=#{radjust_datetime},adjust_statue=#{adjust_statue}
+		where adjust_id=#{adjust_id}
+	</update>
+	<!-- 查询店铺响应的调货申请 -->
+	<select id="adjust_rfind" resultType="map" parameterType="map">
+		select adjust_id,adjust_type,adjust_datetime,shop_unique,adjust_total,adjust_handlestatue,adjust_statue,radjust_datetime,adjust_remark,adjust_count,adjust_price,goods_barcode,goods_name,
+		shop_name,shop_phone
+		from(
+		(select adjust_id,adjust_type,adjust_datetime,a.shop_unique,adjust_total,adjust_handlestatue,adjust_statue,radjust_datetime,adjust_remark,adjust_count,adjust_price,a.goods_barcode,a.goods_name,
+		shop_name,shop_phone
+		from adjust a left join shops s on a.shop_unique=s.shop_unique left join  goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+		where 1=1
+		<if test="goods_message!=null"> and g.goods_name like #{goods_message}</if>
+		<if test="shop_unique!=null"> and rshop_unique=#{shop_unique}</if>
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+		union
+		(select adjust_id,adjust_type,adjust_datetime,a.shop_unique,adjust_total,adjust_handlestatue,adjust_statue,radjust_datetime,adjust_remark,adjust_count,adjust_price,a.goods_barcode,a.goods_name,
+		shop_name,shop_phone
+		from adjust a left join shops s on a.shop_unique=s.shop_unique left join   goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+		where 1=1
+		<if test="goods_message!=null"> and g.goods_name like #{goods_message}</if>
+		<if test="shop_unique!=null"> and rshop_unique=#{shop_unique}</if>
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+		union
+		(select adjust_id,adjust_type,adjust_datetime,a.shop_unique,adjust_total,adjust_handlestatue,adjust_statue,radjust_datetime,adjust_remark,adjust_count,adjust_price,a.goods_barcode,a.goods_name,
+		shop_name,shop_phone
+		from adjust a left join shops s on a.shop_unique=s.shop_unique left join  goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+		where 1=1
+		<if test="goods_message!=null"> and g.goods_name like #{goods_message}</if>
+		<if test="shop_unique!=null"> and rshop_unique=#{shop_unique}</if>
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+		union
+		(select adjust_id,adjust_type,adjust_datetime,a.shop_unique,adjust_total,adjust_handlestatue,adjust_statue,radjust_datetime,adjust_remark,adjust_count,adjust_price,a.goods_barcode,a.goods_name,
+		shop_name,shop_phone
+		from adjust a left join shops s on a.shop_unique=s.shop_unique left join   goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+		where 1=1
+		<if test="goods_message!=null"> and g.goods_name like #{goods_message}</if>
+		<if test="shop_unique!=null"> and rshop_unique=#{shop_unique}</if>
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>)
+		) k
+		order by radjust_datetime
+		<if test="page_start!=null and page_size!=null">
+		limit #{page_start},#{page_size}
+		</if>
+	</select>
+	<select id="dis" parameterType="map" resultType="map">
+		select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+		shop_address_detail,goods_barcode,p
+		from (
+		select adjust_id,adjust_type,adjust_datetime,adjust_total,adjust_remark,adjust_validity,a.goods_name,adjust_count,adjust_price,shop_name,shop_phone,adjust_handlestatue,
+		shop_address_detail,a.goods_barcode,power(shop_latitude-#{shop_latitude},2)+power(shop_longitude-#{shop_longitude},2) p
+		from adjust a left join shops  s on a.shop_unique=s.shop_unique left join goods g on a.shop_unique=g.shop_unique and a.goods_barcode=g.goods_barcode
+		where g.goods_name like #{goods_message} and a.shop_unique &lt;> #{shop_unique} and adjust_statue=#{adjust_statue} and adjust_validity>#{adjust_validity}
+		<if test="adjust_type!=null"> and adjust_type=#{adjust_type}</if>
+		) k  where p &lt; 0.0001
+	</select>
+</mapper>

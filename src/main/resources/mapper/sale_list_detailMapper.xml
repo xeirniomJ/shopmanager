@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Sale_list_detailDao">
+	<select id="findSale_list_details" parameterType="map" resultType="org.haier.shop.entity.Sale_list_detail">
+		select * from sale_list_detail where 1=1
+		<if test="sale_list_detail_id!=null"> and sale_list_detail_id = #{sale_list_detail_id}</if>
+		<if test="sale_list_unique!=null"> and sale_list_unique = #{sale_list_unique}</if>
+	</select>
+</mapper>
