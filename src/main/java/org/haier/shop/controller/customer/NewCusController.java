@@ -1,0 +1,24 @@
+package org.haier.shop.controller.customer;
+
+import java.sql.Timestamp;
+
+import javax.annotation.Resource;
+
+import org.haier.shop.service.CustomerService;
+import org.haier.shop.util.NoteResult;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping("/customer")
+public class NewCusController {
+	@Resource
+	private CustomerService cusService;
+	@RequestMapping("/newCus.do")
+	@ResponseBody
+	public NoteResult execute(String cus_account, String cus_pwd, String cus_name, String cus_sex, String cus_alias,
+			String cus_phone,  Timestamp cus_birthday, String cus_email){
+		return cusService.newcus(cus_account, cus_pwd, cus_name, cus_sex, cus_alias, cus_phone, cus_birthday, cus_email);
+	}
+}

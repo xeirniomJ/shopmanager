@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.ShopDao">
+	<!-- 单表查询店铺信息 -->
+	<select id="findShop" parameterType="map" resultType="map">
+		select shop_name,shop_latitude,shop_longitude,shop_id,shop_unique
+		from
+		shops
+		where 1=1
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+		<if test="manager_account!=null"> and manager_account=#{manager_account}</if>
+		<if test="manager_unique!=null"> and manager_unique=#{manager_unique}</if>
+		<if test="shop_name!=null"> and shop_name=#{shop_name}</if>
+		<if test="examinestatus!=null"> and examinestatus=#{examinestatus}</if>
+	</select>
+	<select id="login" parameterType="map" resultType="map">
+		select
+		shop_name,shop_phone,shop_unique from shops where
+		manager_account=#{manager_account} and manager_pwd=#{manager_pwd}
+	</select>
+	<!-- 查询店铺范围内所有供货商 -->
+	<select id="findPurchases" parameterType="map" resultType="map">
+		select
+		supplier_unique,power(supplier_latitude-#{shop_latitude},2)+power(supplier_longitude-#{shop_longitude},2)
+		distance
+		from supplier
+		where
+		power(supplier_latitude-#{shop_latitude},2)+power(supplier_longitude-#{shop_longitude},2)
+		&lt; #{distance}
+	</select>
+	<insert id="newShop" parameterType="map">
+		insert into
+		shops(shop_unique,shop_name,manager_unique,manager_account,manager_pwd,shop_alias,shop_address_detail,shop_phone)
+		VALUES
+		(#{shop_unique},#{shop_name},#{manager_unique},#{manager_account},#{manager_pwd},#{shop_alias},#{shop_address_detail},#{shop_phone})
+	</insert>
+	<!-- 更新店铺信息 -->
+	<update id="updateShopDetail" parameterType="map">
+		update shops set shop_unique=#{shop_unique}
+		<if test="shop_name!=null">,shop_unique=#{shop_unique}</if>
+		<if test="shop_phone!=null">,shop_phone=#{shop_phone}</if>
+		<if test="shop_address_detail!=null">,shop_address_detail=#{shop_address_detail}</if>
+		<if test="manager_pwd!=null">,manager_pwd=#{manager_pwd}</if>
+		<if test="shop_image_path!=null">, shop_image_path=#{shop_image_path}</if>
+		<if test="shop_remark!=null">,shop_remark=#{shop_remark}</if>
+		<if test="power_supplier!=null">,power_supplier=#{power_supplier}</if>
+		<if test="examinestatus!=null">,examinestatus=#{examinestatus}</if>
+		<if test="examinestatus_reason!=null">,examinestatus_reason=#{examinestatus_reason}</if>
+		where shop_unique=#{shop_unique}
+	</update>
+	<!-- 查询所有申请供应商的店铺列表及详细信息 -->
+	<select id="findShopApplys" parameterType="map" resultType="map">
+		select
+		manager_name,manager_phone,shop_name,shop_address_detail,shop_phone,shop_longitude,shop_latitude,
+		power_createManager,power_examShop,power_modifyFunction,power_examSup,power_forbidCus,shop_unique,shop_remark
+		from shops s left join manager m on m.manager_unique=s.manager_unique
+		where 1=1
+		<if test="examinestatus!=null"> and examinestatus=#{examinestatus}</if>
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	</select>
+	<!-- 查询店铺详情 -->
+	<!-- 删除店铺管理员 -->
+	<delete id="deleteManager" parameterType="map">
+		delete from shops where
+		manager_account=#{manager_account}
+	</delete>
+	<!-- 查询店铺信息及管理员信息 -->
+	<select id="findShopDetails" resultType="map" parameterType="map">
+		select
+		manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+		from (
+			(
+			select
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
+			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+			<if test="message!=null"> and shop_name like #{message}</if>
+			<if test="area_dict_num!=null"> and a.area_dict_num=#{area_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="examinestatus!=null" > and examinestatus=#{examinestatus}</if>
+			)
+			union
+			(
+			select
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
+			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+			<if test="message!=null"> and manager_name like #{message}</if>
+			<if test="area_dict_num!=null"> and a.area_dict_num=#{area_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="examinestatus!=null" > and examinestatus=#{examinestatus}</if>
+			)
+			union
+			(
+			select
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
+			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+			<if test="message!=null"> and shop_phone like #{message}</if>
+			<if test="area_dict_num!=null"> and a.area_dict_num=#{area_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="examinestatus!=null" > and examinestatus=#{examinestatus}</if>
+			)
+			union
+			(
+			select
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
+			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
+			where 1=1
+			<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+			<if test="message!=null"> and manager_phone like #{message}</if>
+			<if test="area_dict_num!=null"> and a.area_dict_num=#{area_dict_num}</if>
+			<if test="carea_dict_num!=null"> and r.area_dict_num=#{carea_dict_num}</if>
+			<if test="parea_dict_num!=null"> and r.area_dict_parent_num=#{parea_dict_num}</if>
+			<if test="examinestatus!=null" > and examinestatus=#{examinestatus}</if>
+			)
+		) o
+		<if test="startNum!=null and pageSize!=null">
+			limit #{startNum},#{pageSize}
+		</if>
+	</select>
+</mapper>

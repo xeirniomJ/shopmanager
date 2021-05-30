@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="utf-8" />
+<style type="text/css">
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+.iw_poi_title {
+	color: #CC5522;
+	font-size: 14px;
+	font-weight: bold;
+	overflow: hidden;
+	padding-right: 13px;
+	white-space: nowrap
+}
+
+.iw_poi_content {
+	font: 12px arial, sans-serif;
+	overflow: visible;
+	padding-top: 4px;
+	white-space: -moz-pre-wrap;
+	word-wrap: break-word
+}
+</style>
+</head>
+<body>
+	<div style="width: 697px; height: 500px; border: 1px solid red;"
+		id="dituContent"></div>
+
+	<script type="text/javascript"
+		src="http://api.map.baidu.com/api?key=2nFRDgSPWGMAR9he3HAOIYZaddImsB9K&v=1.1&services=true"></script>
+	<script type="text/javascript">
+		function initMap() {
+			createMap();
+			setMapEvent();
+			addMapController();
+		}
+
+		function createMap() {
+			var map = new BMap.Map("dituContent");
+			var point = new BMap.Point(108.1010011, 39.012002);
+			map.centerAndZoom(point, 12);
+			window.map = map;
+		}
+
+		function setMapEvent() {
+			map.enableDragging();//设置地图的可拖拽
+			map.enableScrollWheelZoom();
+			map.enableDoubleClickZoom();
+			map.enableKeyboard();
+		}
+		function addMapController() {
+			//想地图添加控件
+			var ctrl_nav = new BMap.NavigationControl({
+				anchor : BMAP_ANCHOR_TOP_LEFT,
+				type : BMAP_NAVIGATION_CONTROL_LARGE
+			});
+			map.addControl(ctrl_nav);
+			//向地图中添加缩略图控件
+			var ctrl_ove = new BMap.OverviewMapControl({
+				anchor : BMAP_ANCHOR_BOTTOM_RIGHT,
+				isOpen : 1
+			});
+			map.addControl(ctrl_ove);
+			//向地图中添加比例尺控件
+			var ctrl_sca = new BMap.ScaleControl({
+				anchor : BMAP_ANCHOR_BOTTOM_LEFT
+			});
+			map.addControl(ctrl_sca);
+		}
+		initMap();
+	</script>
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		(function() {
+			$
+					.ajax({
+						url : "https://api.map.baidu.com/location/ip?ak=2nFRDgSPWGMAR9he3HAOIYZaddImsB9K",
+						type : "get",
+						dataType : "json",
+						success : function(result) {
+							console.log(result);
+						},
+						error : function() {
+							console.log("测试失败了！");
+						}
+					})
+		})();
+	</script>
+</body>
+</html>

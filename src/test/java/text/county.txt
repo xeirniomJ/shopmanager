@@ -1,0 +1,220 @@
+INSERT INTO hat_area VALUES (61,'130201','市辖区','130200'); 
+INSERT INTO hat_area VALUES (62,'130202','路南区','130200'); 
+INSERT INTO hat_area VALUES (63,'130203','路北区','130200'); 
+INSERT INTO hat_area VALUES (64,'130204','古冶区','130200'); 
+INSERT INTO hat_area VALUES (65,'130205','开平区','130200'); 
+INSERT INTO hat_area VALUES (66,'130207','丰南区','130200'); 
+INSERT INTO hat_area VALUES (67,'130208','丰润区','130200'); 
+INSERT INTO hat_area VALUES (68,'130223','滦县','130200'); 
+INSERT INTO hat_area VALUES (69,'130224','滦南县','130200'); 
+INSERT INTO hat_area VALUES (70,'130225','乐亭县','130200'); 
+INSERT INTO hat_area VALUES (71,'130227','迁西县','130200'); 
+INSERT INTO hat_area VALUES (72,'130229','玉田县','130200'); 
+
+INSERT INTO hat_area VALUES (73,'130230','
+
+唐海县
+
+','130200'); 
+
+INSERT INTO hat_area VALUES (74,'130281','
+
+遵化市
+
+','130200'); 
+
+INSERT INTO hat_area VALUES (75,'130283','
+
+迁安市
+
+','130200'); 
+
+INSERT INTO hat_area VALUES (76,'130301','
+
+市辖区
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (77,'130302','
+
+海港区
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (78,'130303','
+
+山海关区
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (79,'130304','
+
+北戴河区
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (80,'130321','
+
+青龙满族自治县
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (81,'130322','
+
+昌黎县
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (82,'130323','
+
+抚宁县
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (83,'130324','
+
+卢龙县
+
+','130300'); 
+
+INSERT INTO hat_area VALUES (84,'130401','
+
+市辖区
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (85,'130402','
+
+邯山区
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (86,'130403','
+
+丛台区
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (87,'130404','
+
+复兴区
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (88,'130406','
+
+峰峰矿区
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (89,'130421','
+
+邯郸县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (90,'130423','
+
+临漳县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (91,'130424','
+
+成安县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (92,'130425','
+
+大名县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (93,'130426','
+
+涉
+
+ 
+
+县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (94,'130427','
+
+磁
+
+ 
+
+县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (95,'130428','
+
+肥乡县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (96,'130429','
+
+永年县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (97,'130430','
+
+邱
+
+ 
+
+县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (98,'130431','
+
+鸡泽县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (99,'130432','
+
+广平县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (100,'130433','
+
+馆陶县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (101,'130434','
+
+魏
+
+ 
+
+县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (102,'130435','
+
+曲周县
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (103,'130481','
+
+武安市
+
+','130400'); 
+
+INSERT INTO hat_area VALUES (104,'130501','
+
+市辖区
+
+','130500');

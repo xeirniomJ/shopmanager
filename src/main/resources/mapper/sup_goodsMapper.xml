@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Sup_goodsDao">
+	<!--  
+	<select id="findSupGoods" resultType="map" parameterType="map">
+		select goods_name,goods_unique,goods_price,goods_barcode,parname,name,supplier_unique from (
+			(select goods_name,goods_unique,goods_price,goods_barcode,s.sup_goods_kind_name parname,k.sup_goods_kind_name name,supplier_unique
+			from sup_goods g left join sup_goods_kind k on g.sup_goods_kind_unique=k.sup_goods_kind_unique 
+			left join sup_goods_kind s on s.sup_goods_kind_unique=k.sup_goods_kind_parunique
+			where supplier_unique in 
+			<foreach collection="supplier_uniques" item="supplier_unique" open="(" close=")" separator=",">
+				#{supplier_unique}
+			</foreach>
+			<if test="sup_goods_kind_parunique!=null"> and k.sup_goods_kind_parunique=#{sup_goods_kind_parunique}</if>
+			<if test="sup_goods_kind_unique!=null"> and k.sup_goods_kind_unique=#{sup_goods_kind_unique}</if>
+			<if test="goods_message!=null"> and goods_name like #{goods_message}</if>)
+			union
+				(select goods_name,goods_unique,goods_price,goods_barcode,s.sup_goods_kind_name parname,k.sup_goods_kind_name name,supplier_unique
+			from sup_goods g left join sup_goods_kind k on g.sup_goods_kind_unique=k.sup_goods_kind_unique 
+			left join sup_goods_kind s on s.sup_goods_kind_unique=k.sup_goods_kind_parunique
+			where supplier_unique in 
+			<foreach collection="supplier_uniques" item="supplier_unique" open="(" close=")" separator=",">
+				#{supplier_unique}
+			</foreach>
+			<if test="sup_goods_kind_parunique!=null"> and k.sup_goods_kind_parunique=#{sup_goods_kind_parunique}</if>
+			<if test="sup_goods_kind_unique!=null"> and k.sup_goods_kind_unique=#{sup_goods_kind_unique}</if>
+			<if test="goods_message!=null"> and goods_alias like #{goods_message}</if>)
+			union
+			(select goods_name,goods_unique,goods_price,goods_barcode,s.sup_goods_kind_name parname,k.sup_goods_kind_name name,supplier_unique
+			from sup_goods g left join sup_goods_kind k on g.sup_goods_kind_unique=k.sup_goods_kind_unique 
+			left join sup_goods_kind s on s.sup_goods_kind_unique=k.sup_goods_kind_parunique
+			where supplier_unique in 
+			<foreach collection="supplier_uniques" item="supplier_unique" open="(" close=")" separator=",">
+				#{supplier_unique}
+			</foreach>
+			<if test="sup_goods_kind_parunique!=null"> and k.sup_goods_kind_parunique=#{sup_goods_kind_parunique}</if>
+			<if test="sup_goods_kind_unique!=null"> and k.sup_goods_kind_unique=#{sup_goods_kind_unique}</if>
+			<if test="goods_message!=null"> and goods_barcode like #{goods_message}</if>)
+			union
+			(select goods_name,goods_unique,goods_price,goods_barcode,s.sup_goods_kind_name parname,k.sup_goods_kind_name name,supplier_unique
+			from sup_goods g left join sup_goods_kind k on g.sup_goods_kind_unique=k.sup_goods_kind_unique 
+			left join sup_goods_kind s on s.sup_goods_kind_unique=k.sup_goods_kind_parunique
+			where supplier_unique in 
+			<foreach collection="supplier_uniques" item="supplier_unique" open="(" close=")" separator=",">
+				#{supplier_unique}
+			</foreach>
+			<if test="sup_goods_kind_parunique!=null"> and k.sup_goods_kind_parunique=#{sup_goods_kind_parunique}</if>
+			<if test="sup_goods_kind_unique!=null"> and k.sup_goods_kind_unique=#{sup_goods_kind_unique}</if>
+			<if test="goods_message!=null"> and goods_brand  like #{goods_message}</if>)
+			) p
+		<if test="startNum!=null and pageSize!=null">
+			limit #{startNum},#{pageSize}
+		</if>
+	</select>
+	-->
+	<!-- 根据输入的商品信息，查询满足条件的商品，并查询相应的供货商信息 -->
+	<select id="findSupGoods" parameterType="map" resultType="map">
+		select goods_name,goods_price,goods_barcode,supplier_unique
+		from 
+		(
+			(select g.goods_name,goods_price,g.goods_barcode,g.default_supplier_unique supplier_unique
+			from goods g left join sup_goods p on g.default_supplier_unique=p.supplier_unique and g.goods_barcode=p.goods_barcode left join 
+			goods_kind k on g.goods_kind_unique=k.goods_kind_unique
+			where 1=1
+			<if test="goods_message!=null">
+				and g.goods_barcode in (
+					select goods_barcode from goods where goods_alias like #{goods_message} and shop_unique=#{shop_unique}
+					union 
+					select goods_barcode from goods where goods_name like #{goods_message} and shop_unique= #{shop_unique}
+					union 
+					select goods_barcode from goods where goods_brand like #{goods_message} and shop_unique=#{shop_unique}
+					union 
+					select goods_barcode from goods where goods_barcode like #{goods_message} and shop_unique=#{shop_unique}
+				)
+			 </if>
+			<if test="goods_kind_unique!=null"> and k.goods_kind_unique=#{goods_kind_unique}</if>
+			<if test="goods_kind_parunique!=null"> and k.goods_kind_parunique=#{goods_kind_parunique}</if>
+			<if test="shop_unique!=null"> and g.shop_unique=#{shop_unique}</if>
+			)
+		) m
+		<if test="startNum!=null and pageSize!=null">
+			limit #{startNum},#{pageSize}
+		</if>
+	</select>
+	<!-- 简单查询商品价格 -->
+	<select id="findSupGoodsPrice" parameterType="map" resultType="map">
+		select goods_name,goods_price
+		from sup_goods
+		where goods_barcode=#{goods_barcode} and supplier_unique=#{supplier_unique}
+	</select>
+</mapper>

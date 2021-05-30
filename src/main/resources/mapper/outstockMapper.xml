@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.OutstockDao">
+	<select id="findOutstocks" parameterType="map" resultType="map">
+		select outstock_id,outstock_date,outstock_total,outstock_unique,o.sale_list_unique,sale_list_id
+		from outstock  o left join sale_list s on o.sale_list_unique=s.sale_list_unique
+		where o.shop_unique=#{shop_unique}
+		<if test="startDate!=null"> and outstock_date>=#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}> outstock_date</if>
+	</select>
+	
+	<select id="findOutstock" parameterType="map" resultType="map">
+		select goods_name,outstock_id,outstock_date,outstock_total,outstock_detail_count,outstock_detail_price,sale_list_id,s.sale_list_unique
+		 from outstock i left join outstock_detail d on i.outstock_unique=d.outstock_unique  left join goods g on d.goods_unique=g.goods_unique  left join sale_list s on s.sale_list_unique=i.sale_list_unique
+		 where outstock_unique=#{outstock_unique}
+	</select>
+</mapper>

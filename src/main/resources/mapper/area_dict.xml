@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Area_dictDao">
+	<select id="find_provinces" resultType="map">
+		select area_dict_num,area_dict_parent_num,area_dict_type,area_dict_content
+		from area_dict 
+		where area_dict_parent_num='0'
+	</select>
+	<select id="find_cities" parameterType="map" resultType="map">
+		<!-- select a.area_dict_num,a.area_dict_parent_num,a.area_dict_type,d.area_dict_content
+		from area_dict a left join area_dict d on a.area_dict_num=d.area_dict_parent_num 
+		where 1=1
+		<if test="area_dict_content!=null"> and a.area_dict_parent_num=#{area_dict_parent_num}</if>
+		-->
+		select d.area_dict_content,d.area_dict_num 
+		from area_dict a left join area_dict d on a.area_dict_num=d.area_dict_parent_num
+		where a.area_dict_num=#{area_dict_num}
+	</select>
+	
+	<select id="findPC" parameterType="map" resultType="map">
+		select  p.area_dict_num pnum,p.area_dict_content pcomtent,c.area_dict_num cnum,c.area_dict_content ccontent,y.area_dict_num,y.area_dict_content
+		from area_dict p left join area_dict c on p.area_dict_num=c.area_dict_parent_num left join area_dict y on c.area_dict_num=y.area_dict_parent_num
+		 where y.area_dict_num=#{area_dict_num}
+	</select>
+</mapper>

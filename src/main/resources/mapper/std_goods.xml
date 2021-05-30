@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Std_goodsDao">
+	<select id="findgoods" parameterType="map" resultType="map">
+		select * from std_goods
+	</select>
+	<update id="update" parameterType="map">
+		update std_goods set goods_alias=#{goods_alias} where goods_id=#{goods_id}
+	</update>
+	<update id="up">
+		update goods set goods_barcode=#{goods_barcode} where goods_id=#{goods_id}
+	</update>
+	
+</mapper>

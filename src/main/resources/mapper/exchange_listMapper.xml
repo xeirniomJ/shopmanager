@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Exchange_listDao">
+	<!-- 更新退货订单 -->
+	<update id="updateExchange" parameterType="map">
+		update exchange_list set exchange_list_id=exchange_list_id
+		<if test="exchange_list_datetime!=null">,exchange_list_datetime=#{exchange_list_datetime}</if>
+		<if test="exchange_list_status!=null">,exchange_list_status=#{exchange_list_status}</if>
+		where exchange_list_unique=#{exchange_list_unique}
+	</update>
+	<!-- 创建新的购物车订单 -->
+	<insert id="newExchange" parameterType="map">
+		insert into exchange_list(exchange_list_unique,shop_unique)
+		VALUES
+		(#{exchange_list_unique},#{shop_unique})
+	</insert>
+	<!-- 添加退货订单详情 -->
+	<insert id="newExchangeDetail" parameterType="map">
+		insert into exchange_list_detail(exchange_list_unique,goods_barcode,exchange_list_detail_count,supplier_unique)
+		VALUES
+		(#{exchange_list_unique},#{goods_barcode},#{exchange_list_detail_count},#{supplier_unique})
+	</insert>
+	<!-- 更新订单详情 -->
+	<insert id="updateExchangeDetails" parameterType="map">
+		update exchange_list_detail set exchange_list_unique=#{exchange_list_unique}
+		<if test="exchange_list_detail_count!=null">,exchange_list_detail_count=#{exchange_list_detail_count}</if>
+		<if test="supplier_unique!=null">,supplier_unique=#{supplier_unique}</if>
+		<if test="sup_exOrder_unique!=null">,sup_exOrder_unique=#{sup_exOrder_unique}</if>
+		where  exchange_list_unique=#{exchange_list_unique}
+		<if test="goods_barcode==null and supplier_unique!=null"> and supplier_unique=#{supplier_unique}</if>
+		<if test="goods_barcode!=null"> and goods_barcode=#{goods_barcode}</if>
+	</insert>
+	<!-- 查询退货订单 -->
+	<select id="findExchangeDetails" parameterType="map" resultType="map">
+		select l.exchange_list_unique,exchange_list_datetime,l.shop_unique,exchange_list_status,d.goods_barcode,exchange_list_detail_count,g.default_supplier_unique,sup_exOrder_unique,goods_name,goods_count
+		from exchange_list l left join exchange_list_detail d on l.exchange_list_unique=d.exchange_list_unique left join goods g on g.goods_barcode=d.goods_barcode and l.shop_unique=g.shop_unique
+		where 1=1
+		<if test="shop_unique!=null"> and l.shop_unique=#{shop_unique}	</if>
+		<if test="manager_unique!=null"> 
+			and l.shop_unique in 	(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		<if test="exchange_list_status!=null"> and exchange_list_status=#{exchange_list_status}</if>
+	</select>
+	<!-- 更新退货清单商品数量 -->
+	<update id="changeExCartCount" parameterType="map">
+		update exchange_list_detail  set exchange_list_detail_count=#{exchange_list_detail_count}
+		where goods_barcode=#{goods_barcode} and exchange_list_unique in 
+		(select exchange_list_unique from exchange_list where shop_unique=#{shop_unique} and exchange_list_status=#{exchange_list_status})
+	</update>
+	<!-- 测试用，无实际意义 -->
+	<select id="tests" parameterType="map" resultType="map">
+		select exchange_list_unique from exchange_list where shop_unique=#{shop_unique} and exchange_list_status=#{exchange_list_status}
+	</select>
+	<!-- 移除换货订单里的商品 -->
+	<delete id="rmExCartGoods" parameterType="map">
+		delete from exchange_list_detail where 
+		goods_barcode=#{goods_barcode}
+		and exchange_list_unique in
+		(select exchange_list_unique from exchange_list where shop_unique=#{shop_unique} and exchange_list_status=#{exchange_list_status})
+	</delete>
+</mapper>

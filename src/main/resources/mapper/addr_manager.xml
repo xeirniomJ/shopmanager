@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Addr_managerDao">
+	<select id="findAddr_details" parameterType="map" resultType="map">
+		select addr_id,c.cus_unique,addr_receiver_name,addr_phone,addr_addr,addr_province,addr_city,addr_county,addr_default,c.cus_id,cus_name,cus_phone
+		 from customer c left join addr_manager m  on c.cus_unique=m.cus_unique where cus_id=#{cus_id}
+	</select>
+	<!-- 查询单个送货地址信息，以便修改 -->
+	<select id="findAddr_detail" parameterType="map" resultType="map">
+		select addr_id,cus_unique,addr_receiver_name,addr_phone,addr_addr,addr_province,addr_city,addr_county,addr_default
+		from addr_manager where 1=1
+		<if test="addr_id!=null"> and addr_id=#{addr_id}</if>
+	</select>
+	<!-- 更新送货地址详情 -->
+	<update id="updateAddr_detail" parameterType="map">
+		update addr_manager set addr_id=#{addr_id}
+		<if test="addr_receiver_name!=null">,addr_receiver_name=#{addr_receiver_name}</if> 
+		<if test="addr_phone!=null">,addr_phone=#{addr_phone}</if>
+		<if test="addr_addr!=null">,addr_addr=#{addr_addr}</if>
+		<if test="addr_province!=null">,addr_province=#{addr_province}</if>
+		<if test="addr_city!=null">,addr_city=#{addr_city}</if>
+		<if test="addr_county!=null">,addr_county=#{addr_county}</if>
+		<if test="addr_default!=null">,addr_default=#{addr_default} </if>
+		where addr_id=#{addr_id}
+	</update>
+	<!-- 设置某人下面的地址均为非默认，以便将莫地址更新为默认 -->
+	<update id="updateAddr" parameterType="map">
+		update addr_manager set addr_default=#{addr_default}
+		where cus_unique=#{cus_unique}
+	</update>
+</mapper>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理员商品信息</title>
+<link rel="stylesheet" type="text/css"
+	href="../../css/public/public.css">
+</head>
+<body>
+	<section>
+		<h1>管理员功能设置</h1>
+		<br>
+		<hr>
+		<div>
+			<form id="managerDetail">
+				<table class="mintable">
+					<caption>管理员功能设置</caption>
+					<thead>
+						<tr>
+							<th>选择</th>
+							<th>设定值</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>姓名</td>
+							<td><input type="text" class="chan" id="manager_name"
+								placeholder="管理员姓名" name="manager_name" required="required"></td>
+						</tr>
+						<tr>
+							<td>账号</td>
+							<td><input type="text" class="chan" id="manager_account" placeholder="管理员账号" required="required" name="manager_account"></td>
+						</tr>
+						<tr>
+							<td>电话</td>
+							<td><input type="tel" class="chan" id="manager_phone" pattern="^1[34578]\d{9}" required="required" name="manager_phone"></td>
+						</tr>
+						<tr>
+							<td>管理员等级</td>
+							<td>
+								<select id="manager_level" class="chan" name="manager_level">
+									<option value="2">超级管理员</option>
+									<option value="3" selected="selected">普通管理员</option> 
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>创建管理员</td>
+							<td><label>开<input type="radio" name="power_createManager"  value="1"></label>&nbsp;<label>关<input
+									type="radio" name="power_createManager"  class="closePower" value="2">
+							</label></td>
+						</tr>
+						<tr>
+							<td>创建新功能</td>
+							<td><label>开<input type="radio" name="power_modifyFunction" value="1"></label>&nbsp;<label>关<input
+									type="radio" name="power_modifyFunction"  class="closePower" value="2">
+							</label></td>
+						</tr>
+						<tr>
+							<td>审核店铺</td>
+							<td><label>开<input type="radio" name="power_examShop" value="1" ></label>&nbsp;<label>关<input
+									type="radio" name="power_examShop" value="2" class="closePower">
+							</label></td>
+						</tr>
+						<tr>
+							<td>审核供应商</td>
+							<td><label>开<input type="radio" name="power_examSup"  value="1"></label>&nbsp;<label>关<input
+									type="radio" name="power_examSup" class="closePower" value="2"></label></td>
+						</tr>
+						<tr>
+							<td>禁用客户</td>
+							<td><label>开<input type="radio" name="power_forbidCus" value="1"></label>&nbsp;<label>关<input
+									type="radio" name="power_forbidCus" class="closePower" value="2"></label></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="center">
+					<br>
+					<input type="button" value="提交" id="submit" class="button"><input type="button" value="返回" id="goback" class="button">
+				</div>
+			</form>
+		</div>
+	</section>
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/cookie_util.js"></script>
+	<script type="text/javascript" src="../../js/jquery.form.js"></script>
+	<script type="text/javascript" src="../../js/manager/managerDetail.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Sup_exOrderDao">
+	<insert id="newExOrder" parameterType="map">
+		insert into sup_exOrder(sup_exOrder_unique,sup_exOrder_datetime,sup_exOrder_status,shop_unique,supplier_unique)
+		VALUES
+		(#{sup_exOrder_unique},#{sup_exOrder_datetime},#{sup_exOrder_status},#{shop_unique},#{supplier_unique})
+	</insert>
+</mapper>

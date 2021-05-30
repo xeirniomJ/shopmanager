@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Sale_listDao">
+	<select id="findSale_lists" parameterType="map" resultType="map">
+		select  sale_list_id,sale_list_unique,s.shop_unique,sale_list_datetime,sale_list_total,cus_unique,sale_type,sale_list_address,sale_list_delfee,
+		sale_list_discount,sale_list_state,sale_list_handlestate,sale_list_payment,  sale_list_remarks,shop_name
+		from sale_list s left join shops p on s.shop_unique=p.shop_unique where 1=1
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate} > sale_list_datetime</if>
+		<if test="cus_unique!=null"> and cus_unique=#{cus_unique}</if>
+		<if test="shop_unique!=null"> and s.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null">
+			and s.shop_unique in (select shop_unique from manager m left join shops s on m.manager_unique=s.manager_unique and m.manager_unique=#{manager_unique})
+		</if>
+		<if test="startTime!=null"> and sale_list_datetime > #{startTime}</if>
+	</select>
+	<!-- 更新订单信息 -->
+	<update id="updateSale_list" parameterType="map">
+		update sale_list set sale_list_id=#{sale_list_id}
+		<if test="sale_list_remarks!=null">,sale_list_remarks=#{sale_list_remarks}</if>
+		<if test="sale_list_delfee!=null">,sale_list_delfee=#{sale_list_delfee}</if>
+		<if test="sale_list_state!=null">	,sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null">,sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="sale_list_total!=null"> ,sale_list_total=#{sale_list_total}</if>
+		where sale_list_id=#{sale_list_id}
+	</update>
+	<select id="findSales" parameterType="map" resultType="map">
+		select sale_list_id,sale_list_unique,s.shop_unique,sale_list_datetime,sale_list_total,s.cus_unique,sale_type,sale_list_address,sale_list_delfee,sale_list_discount,sale_list_state,
+		sale_list_handlestate,sale_list_payment,sale_list_remarks,cus_name,cus_phone,shop_name
+		from sale_list s left join customer c  on  s.cus_unique=c.cus_unique left join shops p on s.shop_unique=p.shop_unique
+		where 1=1
+		<if test="shop_unique!=null" > and s.shop_unique =#{shop_unique} </if>
+		<if test="manager_unique!=null" >  and s.shop_unique in 
+			(select shop_unique from shops where manager_unique =#{manager_unique})
+		</if>
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>=sale_list_datetime</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+	
+	</select>
+	<!-- 查询某段时间内的订单详情 -->
+	<select id="findSales_details"  parameterType="map" resultType="map">
+		select g.goods_name,sum(sale_list_detail_count*sale_list_detail_price) total,sum(sale_list_detail_count) sum
+		from sale_list s left join sale_list_detail d on s.sale_list_unique=d.sale_list_unique left join goods g on s.shop_unique=g.shop_unique and d.goods_barcode=g.goods_barcode
+		where 1=1
+		<if test="shop_unique!=null"> and s.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null"> and s.shop_unique in
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and  #{endDate}>=sale_list_datetime</if>
+		 group by g.goods_name
+	</select>
+	
+	<!-- 查询营业额 -->
+	<select id="findturnover" parameterType="map" resultType="map">
+		select sum(sale_list_total) sum,shop_name
+		from shops p left join 
+		(select sale_list_total,shop_unique from sale_list where 1=1
+			<if test="startDate!=null"> and sale_list_datetime>#{startDate} </if>
+			<if test="endDate!=null"> and #{endDate}>sale_list_datetime </if>
+		) l on p.shop_unique=l.shop_unique
+		where 1=1
+		<if test="shop_unique!=null"> and p.shop_unique=#{shop_unique}</if>
+		<if test="manager_unique"> and p.shop_unique in
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+		group by shop_name
+	</select>
+	<!-- 查询订单详情 -->
+	<select id="findSale_listss" parameterType="map" resultType="map">
+		select sale_list_id,sale_list_datetime,sale_list_total,cus_name,cus_phone,sale_type,sale_list_address,sale_list_delfee,sale_list_discount,sale_list_state,
+		sale_list_handlestate,sale_list_payment,sale_list_remarks,g.goods_barcode,g.goods_name,sale_list_detail_count,sale_list_detail_price
+		from sale_list s left join customer c on s.cus_unique=c.cus_unique left join  sale_list_detail d on s.sale_list_unique=d.sale_list_unique left join  goods g on d.goods_barcode=g.goods_barcode and s.shop_unique=g.shop_unique
+		where 1=1
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate} > sale_list_datetime</if>
+		<if test="cus_unique!=null"> and cus_unique=#{cus_unique}</if>
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+	</select>
+	<!-- 查询生成excel表 -->
+	<select id="findSaless" parameterType="map" resultType="org.haier.shop.entity.Sale">
+		select sale_list_id,sale_list_datetime,sale_list_total,cus_name,cus_phone,sale_type,sale_list_address,sale_list_delfee,sale_list_discount,sale_list_state,
+		sale_list_handlestate,sale_list_payment,sale_list_remarks,g.goods_barcode,g.goods_name,sale_list_detail_count,sale_list_detail_price
+		from sale_list s left join customer c on s.cus_unique=c.cus_unique left join  sale_list_detail d on s.sale_list_unique=d.sale_list_unique left join  goods g on d.goods_barcode=g.goods_barcode and s.shop_unique=g.shop_unique
+		where 1=1
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate} > sale_list_datetime</if>
+		<if test="cus_unique!=null"> and cus_unique=#{cus_unique}</if>
+		<if test="shop_unique!=null"> and s.shop_unique=#{shop_unique}</if>
+	</select>
+	<!-- 查询管理员下所有的店铺的订单信息并生产excel表格 -->
+	<select id="findAllSaless" parameterType="map" resultType="org.haier.shop.entity.Sale">
+		select sale_list_id,sale_list_datetime,sale_list_total,cus_name,cus_phone,sale_type,sale_list_address,sale_list_delfee,sale_list_discount,sale_list_state,
+		sale_list_handlestate,sale_list_payment,sale_list_remarks,g.goods_barcode,g.goods_name,sale_list_detail_count,sale_list_detail_price
+		from sale_list s left join customer c on s.cus_unique=c.cus_unique left join  sale_list_detail d on s.sale_list_unique=d.sale_list_unique left join  goods g on d.goods_unique=g.goods_unique
+		where s.shop_unique in 
+		(select shop_unique from manager m left join shops s on m.manager_unique= s.manager_unique where m.manager_unique=#{manager_unique})
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate} > sale_list_datetime</if>
+		<if test="cus_unique!=null"> and cus_unique=#{cus_unique}</if>
+	</select>
+	<!-- 查询某段时间内，所有订单产品销量 -->
+	<select id="findTotal" parameterType="map" resultType="map">
+		select g.goods_name,sum(sale_list_detail_count*sale_list_detail_price) total
+		from sale_list s left join sale_list_detail d on s.sale_list_unique=d.sale_list_unique left join goods g on d.goods_uniuqe=g.goods_unique
+		where s.shop_unique=#{shop_unique}
+		<if test="startDate!=null"> and sale_list_date>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>sale_list_date</if>
+		group by g.goods_unique
+	</select>
+	<!-- 根据员工号查询其所管理的所有店铺的销售单 -->
+	<select id="findAllSales" parameterType="map" resultType="map">
+		select sale_list_id,sale_list_datetime,sale_list_total,cus_name,cus_phone,sale_type,sale_list_address,sale_list_delfee,sale_list_discount,sale_list_state,
+		sale_list_handlestate,sale_list_payment,sale_list_remarks,shop_name
+		from sale_list s left join customer c on s.cus_unique=c.cus_unique left join shops p on s.shop_unique =p.shop_unique
+		where s.shop_unique in (select shop_unique from manager m left join shops p on m.manager_unique=p.manager_unique where m.manager_unique=#{manager_unique} ) 
+		<if test="sale_list_id!=null"> and sale_list_id like #{sale_list_id}</if>
+		<if test="sale_list_state!=null"> and sale_list_state=#{sale_list_state}</if>
+		<if test="sale_list_handlestate!=null"> and sale_list_handlestate=#{sale_list_handlestate}</if>
+		<if test="startDate!=null"> and sale_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate} > sale_list_datetime</if>
+		<if test="cus_unique!=null"> and cus_unique=#{cus_unique}</if>
+	</select>
+	<!-- 查询订单处理状态 -->
+	<select id="loadSaleListState" resultType="map">
+		select sale_list_state 
+		from sale_list
+		group by sale_list_state;
+	</select>
+	<!-- 查询订单支付装态度 -->
+	<select id="loadSaleListHandleState" resultType="map">
+		select sale_list_handlestate
+		from sale_list
+		group by sale_list_handlestate
+	</select>
+</mapper>

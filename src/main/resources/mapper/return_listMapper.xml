@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Return_listDao">
+	<select id="findReturn_lists" parameterType="map" resultType="org.haier.shop.entity.Return_list">
+		select * from return_list where 1=1
+		<if test="ret_list_id!=null"> and ret_list_id=#{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>
+		<if test="cus_unique!=null"> and cus_unique like #{cus_unique}</if>
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="shop_unique!=null"> and shop_unique=#{shop_unique}</if>
+		<if test="manager_unique!=null">
+			and shop_unique in
+			(select shop_unique from shops where manager_unique=#{manager_unique})
+		</if>
+	</select>
+	<update id="updateReturn_list_detail" parameterType="map" >
+		update return_list set ret_list_state=#{ret_list_state},ret_list_handlestate=#{ret_list_handlestate} where ret_list_unique=#{ret_list_unique}
+	</update>
+	<!-- 跟据条件，查询满足条件的退货订单 -->
+	<select id="findUnDoRets" parameterType="map" resultType="map">
+		<!-- 
+		(select ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_id,c.cus_phone
+		from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_name like#{cus_name}
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>)
+		union
+		(select ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_id,c.cus_phone
+		from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_alias like#{cus_alias}
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>)
+		union
+		(select ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_id,c.cus_phone
+		from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_phone like#{cus_phone}
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>)
+		-->
+		(select ret_list_id,ret_list_unique,r.shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_name,c.cus_phone,shop_name
+		 from return_list r left join customer c on r.cus_unique=c.cus_unique  left join shops s on r.shop_unique=s.shop_unique 
+		 where 1=1
+		 <if test="shop_unique!=null"> and r.shop_unique=#{shop_unique}</if>
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>
+		<if test="manager_unique!=null">
+			and r.shop_unique in 
+			(select shop_unique from manager m left join  shops s on m.manager_unique=s.manager_unique where m.manager_unique=#{manager_unique})
+		</if>
+		)
+		<!--  union
+		(select  ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_name,c.cus_phone
+		 from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_alias like #{cus_alias}
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>
+		) union
+		(select  ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_name,c.cus_phone
+		 from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_phone like #{cus_phone}
+		<if test="ret_list_state!=null"> and ret_list_state=#{ret_list_state}</if>
+		<if test="ret_list_handlestate!=null"> and ret_list_handlestate=#{ret_list_handlestate}</if>
+		<if test="startDate!=null"> and ret_list_datetime>#{startDate}</if>
+		<if test="endDate!=null"> and #{endDate}>ret_list_datetime</if>
+		<if test="ret_list_id!=null"> and ret_list_id like #{ret_list_id}</if>
+		<if test="ret_list_unique!=null"> and ret_list_unique=#{ret_list_unique}</if>)
+		select ret_list_id,ret_list_unique,shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,c.cus_id,c.cus_phone
+		 from return_list r left join customer c on r.cus_unique=c.cus_unique where cus_name like #{cus_name}
+		-->
+	</select>
+	<select id="finddetails" parameterType="map" resultType="map">
+		select  	ret_list_id,r.ret_list_unique,r.shop_unique,ret_list_datetime,ret_list_total,c.cus_unique,ret_list_state,ret_list_handlestate,g.goods_name,ret_list_detail_count,ret_list_detail_price,d.goods_barcode,
+		cus_phone,cus_name
+		from return_list r left join return_list_detail d on r.ret_list_unique=d.ret_list_unique left join goods g on g.goods_barcode=d.goods_barcode and r.shop_unique=g.shop_unique  left join customer c on r.cus_unique=c.cus_unique
+		where r.ret_list_unique=#{ret_list_unique}
+	</select>
+	<select id="findReturns" parameterType="map" resultType="org.haier.shop.entity.Return">
+		select ret_list_id,cus_name,cus_phone,ret_list_datetime,ret_list_total,g.goods_name,ret_list_detail_count,ret_list_detail_price,ret_list_state,ret_list_handlestate
+		from return_list s left join return_list_detail d on s.ret_list_unique=d.ret_list_unique left join goods g on d.goods_barcode=g.goods_barcode and 
+		s.shop_unique=g.shop_unique  left join customer c on s.cus_unique=c.cus_unique
+		where s.shop_unique=#{shop_unique} 
+	</select>
+</mapper>

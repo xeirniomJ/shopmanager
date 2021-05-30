@@ -1,0 +1,33 @@
+body{
+	background-image: ("../Public/images/showarea-back.png");
+	background-attachment: fixed;
+}
+span{
+	width: 100px;
+	text-align: center;
+}
+p{
+	margin: 0px;
+}
+.public{
+	display: none;
+}
+#sale_list_delfee,.sale_list_state,.sale_list_handlestate{
+	width: 98%;
+	height: 20px;
+	border: 0px;
+	border-right: 1px solid #fefefe;
+	text-align: center;
+	
+}
+.showarea{
+	float: left;
+	width: 100%;
+	background-color:#ddd;
+}
+#sale_list_remarks{
+	width:100%;
+	height: 100%;
+	background-color: #eee;
+	border:1px solid #fefefe;
+}

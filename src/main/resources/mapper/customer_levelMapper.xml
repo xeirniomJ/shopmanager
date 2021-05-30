@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.haier.shop.dao.Customer_levelDao">
+	<select id="findCustomer_levels" parameterType="map" resultType="map">
+		select * from customer_level where 1=1
+		<if test="customer_level_id!=null"> and customer_level_id=#{customer_level_id}</if>
+		<if test="customer_level_unique!=null"> and customer_level_unique=#{customer_level_unique}</if>
+		<if test="customer_level_name!=null"> and customer_level_name=#{customer_level_name}</if>
+	</select>
+	<select id="finds" parameterType="map" resultType="map">
+		select * from customer_level where 1=1
+	</select>
+</mapper>
