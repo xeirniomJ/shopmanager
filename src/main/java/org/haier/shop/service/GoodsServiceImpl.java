@@ -81,6 +81,7 @@ public class GoodsServiceImpl implements GoodsService {
 			ns.setMsg("没有符合条件的产品");
 			return ns;
 		}
+		
 		ns.setStatus(0);
 		ns.setMsg("查询成功");
 		ns.setData(reslist);
@@ -106,7 +107,7 @@ public class GoodsServiceImpl implements GoodsService {
 		ns.setMsg("查询成功");
 		return ns;
 	}
-
+	
 	/**
 	 * 促销管理界面，促销状态商品查询
 	 */
