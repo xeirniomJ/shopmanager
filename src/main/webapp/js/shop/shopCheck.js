@@ -84,7 +84,7 @@ function findShops(){
 					}else{
 						tr+="审核状态未知,请检查系统状态！</td><td>";
 					}
-					tr+="<input type='button' value='查看详情' onclick='showShopDetails(this)'></td></tr>";
+					tr+="<input type='button' value='查看详情' onclick='showShopDetails(this)' class='cbutton'></td></tr>";
 					$tr=$(tr);
 					$tr.data("shop_unique",shops[i].shop_unique);
 					$("#shopList").append($tr);

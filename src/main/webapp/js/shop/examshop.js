@@ -47,7 +47,7 @@ function findSups(){
 					}else{
 						tr+="</td><td>";
 					}
-					tr+="<input type='button' value='查看详情' class='change' onclick='toShopDetail(this)'></td></tr>";
+					tr+="<input type='button' value='查看详情' class='change cbutton' onclick='toShopDetail(this)'></td></tr>";
 					$tr=$(tr);
 					$tr.data("shop_unique",shops[i].shop_unique);
 					$("#shopApplys").append($tr);

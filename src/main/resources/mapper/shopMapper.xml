@@ -68,11 +68,11 @@
 	<!-- 查询店铺信息及管理员信息 -->
 	<select id="findShopDetails" resultType="map" parameterType="map">
 		select
-		manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+		manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique,examinestatus_reason
 		from (
 			(
 			select
-			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique,examinestatus_reason
 			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
 			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
 			where 1=1
@@ -86,7 +86,7 @@
 			union
 			(
 			select
-			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique,examinestatus_reason
 			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
 			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
 			where 1=1
@@ -100,7 +100,7 @@
 			union
 			(
 			select
-			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique,examinestatus_reason
 			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
 			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
 			where 1=1
@@ -114,7 +114,7 @@
 			union
 			(
 			select
-			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique
+			manager_name,manager_phone,shop_name,shop_phone,shop_address_detail,shop_longitude,shop_latitude,shop_remark,examinestatus,shop_unique,examinestatus_reason
 			from shops s left join manager m on s.manager_unique=m.manager_unique left join area_dict a on a.area_dict_num=s.area_dict_num
 			left join area_dict r on a.area_dict_parent_num=r.area_dict_num
 			where 1=1

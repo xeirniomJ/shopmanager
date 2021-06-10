@@ -264,6 +264,7 @@ public class ShopServiceImpl implements ShopService{
 		ns.setData(shopList.get(0));
 		return ns;
 	}
+	
 	/**
 	 * 更新店铺的审核状态
 	 */

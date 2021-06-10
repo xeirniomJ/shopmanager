@@ -235,21 +235,32 @@ span{
 	position: absolute;
 	width: 100%;
 	text-align: center;
-}
-.traveGps li{
-	float: left;
 	border: 1px solid red;
+	padding: 0px;
+}
+.check{
+	float: left;
+	border: 1px solid gray;
 	width: 10%;
-	background-color: gray;
+	background-color: #c0c0c0;
 	color: white;
+	padding: 0px;
+	margin: 0px;	
+}
+.check:hover{
+	position: relative;
+	top: 1px;
 }
 
 .gps{
 	width: 100%;
 	text-align: center;
-	padding: 5%;
 }
 .li{
-	border: 1px solid red;
+	border: 1px solid gray;
 	margin:0px 0px;
+}
+
+br {
+	clear: both;
 }

@@ -2,7 +2,8 @@ var shop_unique=getCookie("shop_unique");//店铺编号
 var manager_unique=getCookie("manager_unique");//管理员编号
 var manager_token=getCookie("manager_token");//管理员登录口令
 var k=2;
-var flag=true;
+var flag=true;//标志，用来判定审核状态更该后，提示信息的现实
+
 $(function(){
 	//输入框获取焦点后，自动全选
 	$("input").focus(selectAll);
@@ -21,7 +22,6 @@ $(function(){
 function selectAll(){
 	this.select();
 }
-
 //点击通过审核按钮，弹出确认框，进一步确认通过审核
 function passExamine(){
 	var flag=confirm("确定该店铺信息通过审核吗");
@@ -86,7 +86,7 @@ function findShopDetail(){
 		}
 	});
 }
-//等待3S后，页面返回申请界面
+//等待2S后，页面返回申请界面
 function toExamShop(){
 	if(k>=1){
 		if(flag){

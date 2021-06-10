@@ -3,32 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <title>店铺详情查看</title>
-<link rel="stylesheet" type="text/css" href="../../css/public.css">  
+<link rel="stylesheet" type="text/css" href="../../css/public.css">
+<link rel="stylesheet" type="text/css"
+	href="../../css/shop/shopFunction.css">
 </head>
 <body>
 	<div id="gps">
 		<ul class="traveGps">
-			<li>基本信息</li>
-			<li>商品展示</li>
-			<li>分类信息</li>
-			<li>销售状况</li>
-			<li>进货状况</li>
-			<li>功能设置</li>
+			<li class="baseMessage check checked">基本信息</li>
+			<li class="goodsMessage check">商品展示</li>
+			<li class="goodsKindsMessage check">分类信息</li>
+			<li class="saleMessage check">销售状况</li>
+			<li class="purchaseMessage check">进货状况</li>
+			<li class="functionMessage check">功能设置</li>
 		</ul>
 		<br>
 		<hr>
 	</div>
 	<section>
-		<h1>店铺详情查看</h1>
-		<table>
-			<caption>店铺基本详情</caption>
-		</table>
-		<p>其他功能选择</p>
 		<p>功能一：查看店铺所售商品</p>
 		<p>功能二：查看店铺分类信息</p>
 		<p>功能三：查看店铺商品销售信息</p>
 		<p>功能四：店铺设置信息</p>
 		<p>功能五：还有其他需要设置的吗？</p>
 	</section>
+	<!-- 店铺基本信息 -->
+	<div class="baseMessage public">
+		<div class="managerDesign div4">
+			<span class="title">管理员名称</span><span class="division">:</span><span	class="value" id="manager_name">&nbsp;</span>
+		</div>
+		<div class="managerDesign div4">
+			<span class="title">管理员电话</span><span class="division">:</span><span	class="value" id="manager_phone">&nbsp;</span>
+		</div>
+	</div>
+	<br>
+	<div class="baseMessage public">
+		<div class="shopDesign div4">
+			<span class="title">店铺名称</span><span class="division">:</span><span	class="value" id="shop_name">&nbsp;</span>
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">店铺电话</span><span class="division">:</span><span	class="value" id="shop_phone">&nbsp;</span>
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">店铺地址</span><span class="division">:</span><span	class="value" id="shop_address_detail">&nbsp;</span>
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">店铺备注</span><span class="division">:</span><span	class="value" id="shop_remark">&nbsp;</span>
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">店铺经度</span><span class="division">:</span><input	type="text" class="value" id="shop_latitude">
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">店铺维度</span><span class="division">:</span><input	type="text" class="value" id="shop_longitude">
+		</div>
+		<div class="shopDesign div4">
+			<span class="title">审核状态</span><span class="division">:</span><span	class="value" id="examinestatus">&nbsp;</span>
+		</div>
+		<div class="shopDesign div4 examinestatus_reason public">
+			<span class="title">拒绝原因</span><span class="division">:</span><input	type="text" class="value" id="examinestatus_reason">
+		</div>
+	</div>
 </body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/cookie_util.js"></script>
+<script type="text/javascript" src="../../js/shop/shopFunction.js"></script>
 </html>
