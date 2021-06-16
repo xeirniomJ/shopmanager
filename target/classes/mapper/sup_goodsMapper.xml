@@ -61,7 +61,7 @@
 		(
 			(select g.goods_name,goods_price,g.goods_barcode,g.default_supplier_unique supplier_unique
 			from goods g left join sup_goods p on g.default_supplier_unique=p.supplier_unique and g.goods_barcode=p.goods_barcode left join 
-			goods_kind k on g.goods_kind_unique=k.goods_kind_unique
+			goods_kind k on g.goods_kind_unique=k.goods_kind_unique and k.shop_unique=g.shop_unique
 			where 1=1
 			<if test="goods_message!=null">
 				and g.goods_barcode in (

@@ -552,4 +552,36 @@ public class GoodsServiceImpl implements GoodsService {
 		ns.setData(list);
 		return ns;
 	}
+	/**
+	 * 管理员查看店铺商品信息
+	 */
+	public NoteResult queryGoodsMessage(String manager_unique,String manager_token,String shop_unique){
+		NoteResult ns=new NoteResult();
+		if(null==manager_unique||null==manager_token){
+			ns.setStatus(2);
+			ns.setMsg("您的登录已超时，请重新登录");
+			return ns;
+		}
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("manager_unique", manager_unique);
+		map.put("manager_token", manager_token);
+		int k=managerDao.findManagers(map).size();
+		if(k!=1){
+			ns.setStatus(2);
+			ns.setMsg("您的登录已超时，请重新登录!");
+			return ns;
+		}
+		map.clear();
+		map.put("shop_unique", shop_unique);
+		List<Map<String,Object>> goodsList=goodsDao.findGoods1(map);
+		if(goodsList.size()==0){
+			ns.setMsg("没有满足条件的商品");
+			ns.setStatus(1);
+			return ns;
+		}
+		ns.setMsg("查询成功！");
+		ns.setStatus(0);
+		ns.setData(goodsList);
+		return ns;
+	}
 }

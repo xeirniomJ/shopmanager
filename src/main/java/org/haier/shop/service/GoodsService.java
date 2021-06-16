@@ -60,4 +60,13 @@ public interface GoodsService {
 	 * @return
 	 */
 	public NoteResult findGoodsSuppliers(String goods_barcode,String area_dict_num);
+	/**
+	 * 管理员查看店铺商品信息
+	 * @param manager_unique
+	 * @param manager_token
+	 * @param shop_unique
+	 * @param pageNum
+	 * @return
+	 */
+	public NoteResult queryGoodsMessage(String manager_unique,String manager_token,String shop_unique);
 }

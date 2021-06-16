@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <title>店铺详情查看</title>
 <link rel="stylesheet" type="text/css" href="../../css/public.css">
-<link rel="stylesheet" type="text/css"
-	href="../../css/shop/shopFunction.css">
+<link rel="stylesheet" type="text/css" href="../../css/shop/shopFunction.css">
 </head>
 <body>
 	<div id="gps">
 		<ul class="traveGps">
-			<li class="baseMessage check checked">基本信息</li>
+			<li class="baseMessage check" id="baseMessage">基本信息</li>
 			<li class="goodsMessage check">商品展示</li>
 			<li class="goodsKindsMessage check">分类信息</li>
 			<li class="saleMessage check">销售状况</li>
@@ -21,12 +20,15 @@
 		<hr>
 	</div>
 	<section>
+		<!-- 
 		<p>功能一：查看店铺所售商品</p>
 		<p>功能二：查看店铺分类信息</p>
 		<p>功能三：查看店铺商品销售信息</p>
 		<p>功能四：店铺设置信息</p>
 		<p>功能五：还有其他需要设置的吗？</p>
+		 -->
 	</section>
+	<br>
 	<!-- 店铺基本信息 -->
 	<div class="baseMessage public">
 		<div class="managerDesign div4">
@@ -63,8 +65,65 @@
 			<span class="title">拒绝原因</span><span class="division">:</span><input	type="text" class="value" id="examinestatus_reason">
 		</div>
 	</div>
+	<!-- 
+		此处展示的内容为商品信息
+	 -->
+	<div class="goodsMessage public">
+		<!-- 此处加上店铺销售的产品信息 -->
+		<!-- 此处分页查询店铺销售商品信息 -->
+		<!-- 信息包括：
+			1、商品名称
+			2、商品条码
+			3、商品售价
+			4、商品库存量？
+			5、商品分类信息、
+			6、商品其他信息
+			此处使用table表现么？
+		 -->
+		 <table>
+		 	<caption>商品信息列表</caption>
+		 	<thead>
+		 		<tr>
+		 			<th>序号</th>
+		 			<th>商品名称</th>
+		 			<th>商品条码</th>
+		 			<th>库存数量</th>
+		 			<th>商品售价</th>
+		 			<th>累计销量</th>
+		 			<th>商品大类</th>
+		 			<th>商品小类</th>
+		 			<th>查看详情</th>
+		 			<!-- 查看详情要包含哪些内容 -->
+		 			<!-- 基本商品信息 -->
+		 			<!-- 商品的销售状况
+		 				1、月销量
+		 				2、每日销量
+		 				3、销量走势图
+		 				4、其他信息
+		 			 -->
+		 		</tr>
+		 	</thead>
+		 	<tbody id="goodsList">
+		 		<tr>
+		 			<td>示例1号</td>
+		 			<td>胡乱起的一个名字，没有实质性意义</td>
+		 			<td>31231231243442</td>
+		 			<td>203</td>
+		 			<td>100</td>
+		 			<td>300</td>
+		 			<td>苦瓜脸</td>
+		 			<td>瓜子类</td>
+		 			<td><input type="button" value="查看详情" class="cbutton" onclick=""></td>
+		 		</tr>
+		 	</tbody>
+		 </table>
+		 <br>
+		 <div class="tcdPageCode" id="pages">
+		 </div>
+	</div>
 </body>
 <script type="text/javascript" src="../../js/jquery.min.js"></script>
 <script type="text/javascript" src="../../js/cookie_util.js"></script>
+<script type="text/javascript" src="../../js/fenye.js"></script>
 <script type="text/javascript" src="../../js/shop/shopFunction.js"></script>
 </html>

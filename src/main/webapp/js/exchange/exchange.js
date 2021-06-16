@@ -24,6 +24,14 @@ $(function(){
 	$("#submitExCart").click(submitExCart);
 	//进入页面后，自动加载购物车商品
 	findExchangeGoods();
+	
+	//输入框取消回车冒泡事件
+	$("input").keydown(function(event){
+		var code=event.keyCode;
+		if(code==13){
+			event.stopPropagation()
+		}
+	})
 })
 //单击商品查询，弹出商品查询结果界面并显示结果集
 function goodsQuery(){

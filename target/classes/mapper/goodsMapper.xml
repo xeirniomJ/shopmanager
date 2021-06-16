@@ -21,7 +21,7 @@
 	<!-- 商品管理界面，查询满足条件的商品信息 -->
 	<select id="findGoods1" parameterType="map" resultType="map">
 		select goods_id,g.shop_unique,g.goods_barcode,g.goods_brand,g.goods_name,g.goods_alias,goods_in_price,g.goods_sale_price,g.goods_promotion,shop_name,g.goods_count,supplier_name,
-		g.goods_life,goods_points,g.goods_address,g.goods_discount,g.goods_contain,g.goods_picturepath,g.goods_kind_unique,
+		g.goods_life,goods_points,g.goods_address,g.goods_discount,g.goods_contain,g.goods_picturepath,g.goods_kind_unique,goods_sold,
 		u.supplier_unique,goods_standard,goods_remarks,k.goods_kind_name k,l.goods_kind_name l,goods_price
 		from goods g left join goods_kind k on g.goods_kind_unique=k.goods_kind_unique left join goods_kind l on k.goods_kind_parunique=l.goods_kind_unique left join shops s on g.shop_unique=s.shop_unique
 		left join supplier u on g.default_supplier_unique=u.supplier_unique left join sup_goods o on o.goods_barcode =g.goods_barcode and g.default_supplier_unique=o.supplier_unique

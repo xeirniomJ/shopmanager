@@ -222,9 +222,12 @@ function loadCities(){
 		success:function(result){
 			if(result.status==0){
 				$("#cities").empty();
+				$("#contries").empty();
 				var cities=result.data;
 				var option="<option value='0'>--请选择城市--</option>";
 				$("#cities").append(option);
+				option="<option value='0'>--请选择区县--</option>";
+				$("#contries").append(option);
 				for(var i=0;i<cities.length;i++){
 					var option="<option value='"+cities[i].area_dict_num+"'>"+cities[i].area_dict_content+"</option>";
 					$("#cities").append(option);

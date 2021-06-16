@@ -250,6 +250,7 @@ span{
 .check:hover{
 	position: relative;
 	top: 1px;
+	cursor: pointer;
 }
 
 .gps{
